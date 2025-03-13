@@ -13,11 +13,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = User::find(12)->categories;
+        $categories = User::find(1)->categories;
 
-        dd($categories);
-
-        return view('welcome');
+        return view('categories', compact('categories'));
     }
 
     /**
@@ -25,15 +23,25 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('category-create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
+    {   
+               
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'user_id' => 'required|integer|exists:users,id'
+        ]);
+
+     
+        $category = Category::create($validated);
+
+        return redirect('/')->with('message', 'Categoria '. $category->name .' criada com sucesso!');
     }
 
     /**
@@ -41,7 +49,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return view('category-show', compact('category'));
     }
 
     /**
@@ -49,7 +57,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('category-edit', compact('category'));
     }
 
     /**
@@ -57,7 +65,12 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+       $category->update([
+              'name' => $request->name,
+              'description' => $request->description
+       ]);
+
+       return redirect('/')->with('message', 'Categoria '. $category->name .' atualizada com sucesso!');
     }
 
     /**
@@ -65,6 +78,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return redirect('/')->with('message', 'Categoria '. $category->name . ' apagada com successo!' );
     }
 }
