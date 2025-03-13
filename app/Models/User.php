@@ -44,6 +44,15 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the Task for the user
+     */
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
