@@ -13,7 +13,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = User::find(1)->categories;
+        $categories = User::find(2)->categories;
 
         return view('categories', compact('categories'));
     }

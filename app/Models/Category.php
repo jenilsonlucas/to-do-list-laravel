@@ -35,7 +35,7 @@ class Category extends Model
       * Get the task for the category
       */
 
-      public function task():HasMany
+      public function tasks():HasMany
       {
          return $this->hasMany(Task::class);
       }

@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
-    
+   /**
+    * @use HasFactory<\Database\Factories\TaskFactory>
+    */
+    use HasFactory;
     /**
      * @var list<string>
      */
@@ -16,7 +20,6 @@ class Task extends Model
         "name",
         "description",
         "completed",
-        "due_at",
         "user_id",
         "category_id"
      ];
