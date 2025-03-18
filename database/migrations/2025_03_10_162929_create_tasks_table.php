@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 255);
             $table->text('description');
-            $table->boolean('completed')->default(false);
-            $table->dateTime('due_date');
+            $table->boolean('completed')->default(false);   
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('category_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
