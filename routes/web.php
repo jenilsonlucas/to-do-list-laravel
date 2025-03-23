@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,3 +45,9 @@ Route::delete('/tarefas/{task}', [TaskController::class, 'destroy'])->name('task
 Route::get('/entrar', [LoginController::class, 'index'])->name('login');
 
 Route::post('/login', [LoginController::class, 'login']);
+
+Route::get('/registrar', [RegisterController::class, 'showRegisterForm'])->name('register');
+
+Route::post('/register', [RegisterController::class, 'register']);
+
+Route::post('/logout', [LoginController::class, 'logout']);

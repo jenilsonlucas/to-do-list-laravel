@@ -29,17 +29,24 @@ class LoginController extends Controller
             'password' => ['required']
         ]);
         
-        $remember = $request->validate([
-            'remember' => ['required', 'boolean']
-        ]);
+        $remember = $request->boolean('remember');
       
         if(Auth::attempt($credentials, $remember))  {
             $request->session()->regenerate();
-            return redirect()->intended('tasks.index');
+            return redirect()->intended('tarefas');
         }
 
         return back()->with('message', 'verifica os dados enviados');
     }
 
-  
+    public function logout(Request $request): RedirectResponse
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+        
+        return redirect('/');
+    }
 }
