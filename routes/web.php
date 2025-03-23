@@ -47,4 +47,7 @@ Route::get('/entrar', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 
 Route::get('/registrar', [RegisterController::class, 'showRegisterForm'])->name('register');
+
 Route::post('/register', [RegisterController::class, 'register']);
+
+Route::post('/logout', [LoginController::class, 'logout']);

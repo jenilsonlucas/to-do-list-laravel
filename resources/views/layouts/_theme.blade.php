@@ -11,6 +11,12 @@
     <h1>Application To do List</h1>
     <a href="{{route('login')}}">Login</a>
     <a href="{{route('register')}}">Register</a>
+    @auth
+        <form action="{{url('/logout')}}" method="post">
+            @csrf
+            <button type="submit">Sair</button>
+        </form>
+    @endauth    
     @if(session('message'))
         <h3>{{session('message')}}</h3>
     @endif
