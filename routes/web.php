@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,3 +37,10 @@ Route::get('/tarefas/{task}/edit', [TaskController::class, 'edit'])->name('tasks
 Route::put('/tarefas/{task}', [TaskController::class, 'update'])->name('tasks.update');
 
 Route::delete('/tarefas/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+
+
+//Auth route
+
+Route::get('/entrar', [LoginController::class, 'index'])->name('login');
+
+Route::post('/login', [LoginController::class, 'login']);
