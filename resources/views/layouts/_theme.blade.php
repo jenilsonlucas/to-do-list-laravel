@@ -10,6 +10,7 @@
 <body>
     <h1>Application To do List</h1>
     <a href="{{route('login')}}">Login</a>
+    <a href="{{route('register')}}">Register</a>
     @if(session('message'))
         <h3>{{session('message')}}</h3>
     @endif
