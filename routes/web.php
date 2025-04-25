@@ -54,6 +54,7 @@ Route::post('/register', [RegisterController::class, 'register']);
 
 Route::post('/logout', [LoginController::class, 'logout']);
 
+
 Route::get('/email/verificar', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
