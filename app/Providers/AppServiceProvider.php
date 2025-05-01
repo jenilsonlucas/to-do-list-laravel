@@ -22,9 +22,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Event::listen(
-            Verified::class,
-            SendWelcomeEmail::class
-        );
+
     }
 }
