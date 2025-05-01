@@ -34,7 +34,6 @@ class CategoryController extends Controller
                
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
             'user_id' => 'required|integer|exists:users,id'
         ]);
 
@@ -67,7 +66,6 @@ class CategoryController extends Controller
     {
        $category->update([
               'name' => $request->name,
-              'description' => $request->description
        ]);
 
        return redirect('/')->with('message', 'Categoria '. $category->name .' atualizada com sucesso!');
