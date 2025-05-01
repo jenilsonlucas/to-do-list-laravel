@@ -21,6 +21,8 @@ class CreateDefaultList
      */
     public function handle(Verified $event): void
     {
-        
+        $event->user->categories()->create([
+            "name" => "Minhas tarefas"
+        ]);
     }
 }
