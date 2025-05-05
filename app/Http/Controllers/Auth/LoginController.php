@@ -39,7 +39,7 @@ class LoginController extends Controller
             return redirect()->intended('tarefas');
         }
 
-        return back()->with('message', 'verifica os dados enviados');
+        return back()->with('credentials', 'Verifique seu email e senha e tente novamente');
     }
 
     public function logout(Request $request): RedirectResponse

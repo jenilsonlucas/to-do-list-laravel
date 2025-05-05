@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('/', [CategoryController::class, 'index']);
+/*Route::get('/', [CategoryController::class, 'index']);
 
 Route::get('/categoria/criar', [CategoryController::class, 'create']);
 
@@ -41,14 +41,16 @@ Route::put('/tarefas/{task}', [TaskController::class, 'update'])->name('tasks.up
 
 Route::delete('/tarefas/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
-
+*/
 //Auth route
 
-Route::get('/entrar', [LoginController::class, 'index'])->name('login');
+Route::get('/', function (){
+    $showRegister = old('form_type') === 'register';
+
+    return view('auth.auth', compact('showRegister'));
+})->name('auth');
 
 Route::post('/login', [LoginController::class, 'login']);
-
-Route::get('/registrar', [RegisterController::class, 'showRegisterForm'])->name('register');
 
 Route::post('/register', [RegisterController::class, 'register']);
 
