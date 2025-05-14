@@ -36,7 +36,7 @@ class LoginController extends Controller
       
         if(Auth::attempt($credentials, $remember))  {
             $request->session()->regenerate();
-            return redirect()->intended('tarefas');
+            return redirect()->intended('app');
         }
 
         return back()->with('credentials', 'Verifique seu email e senha e tente novamente');

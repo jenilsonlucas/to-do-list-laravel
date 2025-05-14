@@ -1,0 +1,88 @@
+
+<div class="dropdown">
+    <div class="select">
+        <span class="selected">Figma</span>
+        <div class="caret"></div>
+    </div>
+    <ul class="menu">
+        <li>Frammer</li>
+        <li>Skethc</li>
+        <li>Invision Studio</li>
+        <li class="active">Figma</li>
+    </ul>
+</div>
+
+<div class="dropdown">
+    <div class="select">
+        <span class="selected">Facebook</span>
+        <div class="caret"></div>
+    </div>
+    <ul class="menu">
+        <li>Frammer</li>
+        <li>Skethc</li>
+        <li>Invision Studio</li>
+        <li class="active">Facebook</li>
+    </ul>
+</div>
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.dropdown{
+    min-width: 15em;
+    position: relative;
+    margin: 2em;
+}
+
+.select{
+    background: #2a2f3b;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid #2a2f3b;
+    border-radius: 0.5em;
+    padding: 1em;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.select-clicked {
+    border: 2px #26489a solid;
+    box-shadow: 0 0 0 0.8em #26489a;
+}
+
+.select:hover{
+    background: #323741;
+}
+
+.caret{
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #fff;
+    transition: 0.3;
+}
+
+.caret-rotate {
+    transform: rotate(180deg);
+}
+
+.dropdown .menu{
+    display: none;
+    opacity: 0;
+}
+
+.active {
+    background: #23242a;
+}
+
+.dropdown .menu-open{
+    display: block;
+    opacity: 1;
+}

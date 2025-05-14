@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To do list app</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="{{asset('css/style.css')}}">
+    <link rel="stylesheet" href="./assets/styles/style.css">
 </head>
-
 
 <body>
     <div class="navbar-top">
@@ -40,7 +39,7 @@
             </div>
             <div class="profile">
                 <div class="img">
-                    <img src="{{asset('/images/profile.jpeg')}}">
+                    <img src="./assets/images/profile.jpeg">
                 </div>
             </div>
 
@@ -68,79 +67,21 @@
                 </ul>
             </div>
             <span class="thing-all aside-btn-category"><i class='bx bx-plus'></i>Criar nova lista</span>
-            <a href="{{url('/sair')}}" class="loggout"><i class='bx bxs-door-open'></i>Sair</a>
+            <a href="#" class="loggout"><i class='bx bxs-door-open'></i>Sair</a>
 
         </nav>
     </aside>
 
     <div class="content">
-        @yield('content')
+        
+
+    </div>
     </div>
 
-    <div class="form-create-task">
-        <div class="form-create">
-            <div class="icon-close">
-                <span><i class='bx bx-x'></i></span>
-            </div>
-            <form action="/angola" method="post">
-                @csrf
-                @method('POST')
-                <div class="input-box">
-                    <span class="icon"></span>
-                    <input type="text" name="nome" placeholder="Adicionar título">
-                </div>
-                <div class="textarea-box">
-                    <span class="icon"><i class='bx bx-menu-alt-left'></i></span>
-                    <div>
-                        <textarea name=""></textarea>
-                    </div>
-                </div>
-                <div class="select-box">
-                    <span class="icon"><i class='bx bx-calendar'></i></span>
-                    <select name="" id="">
-                        <option value="">As minha tarefas</option>
-                    </select>
-                </div>
-                <div class="btn-task">
-                    <button class="btn">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="leaving-container">
-        <div class="leaving-task">
-            <span class="leaving-task-title">Rejeitar as alterações não guardadas?</span>
-            <div class="btn-leaving">
-                <span class="btn keep">Cancelar</span>
-                <span class="btn leave">Rejeitar</span>
-            </div>
-        </div>
-    </div>
+    
 
-    <div class="form-create-category">
-        <div class="form-create">
-            <div class="category-title">
-                <h3>Criar nova lista</h3>
-            </div>
-            <form action="{{route('category.store')}}" method="post">
-                @csrf
-                @method('POST')
-                <div class="input-box">
-                    <input type="text" name="name" placeholder="Introduzir nome">
-                </div>
-                <div class="message-category">
-                    <span class="message-category-error">O nome da lista de tarefas não pode estar vazio.</span>
-                </div>
-
-                <div class="btn">
-                    <span class="cancel">Cancelar</span>
-                    <button type="submit" class="submit">Concluido</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
- <script src="{{asset('js/script.js')}}"></script>
+   
+    <script src="./assets/js/script.js"></script>
 </body>
 
 </html>
