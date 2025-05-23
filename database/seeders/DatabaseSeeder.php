@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        //User::factory(10)->create();
+        User::factory(1)->create();
 
         /*User::factory()->create([
             'name' => 'Test User',
@@ -26,12 +26,12 @@ class DatabaseSeeder extends Seeder
         ->hasCategories(5)
         ->create();*/
 
-        User::factory(2)
-        ->has(
-            Category::factory(2)
-            ->has(
-                Task::factory(1)->for(User::factory())
-            )
-            )->create();
+        // User::factory(2)
+        // ->has(
+        //     Category::factory(2)
+        //     ->has(
+        //         Task::factory(1)->for(User::factory())
+        //     )
+        //     )->create();
      }
 }

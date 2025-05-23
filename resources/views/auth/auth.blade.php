@@ -251,7 +251,7 @@
                 <div class="form-title">
                     <p>Que bom que você voltou</p>
                 </div>
-                <form action="{{ url('/login') }}" method="post">
+                <form action="{{ url('/login') }}" data-send="false" method="post">
                     @csrf
                     <div class="input-box">
                         <input type="email" name="email" value="{{ old('email') }}" placeholder=" " required>
@@ -261,7 +261,8 @@
                     <p class="message error">
                         <i class='bx bx-error-circle'></i>
                         {{ session('credentials' )}}
-                    </p>
+                    </p>cler
+                    
                     @endif
                     <div class="input-box">
                         <input type="password" name="password" placeholder=" " required>
@@ -289,7 +290,7 @@
                 <div class="form-title">
                     <p>Criar uma conta</p>
                 </div>
-                <form action="{{ url('/register')}}" method="post">
+                <form action="{{ url('/register')}}" data-send="false" method="post">
                     @csrf
                     <input type="hidden" name="form_type" value="register">
                     <div class="input-box">
@@ -309,7 +310,7 @@
                     @error('email')
                     <p class="message error">
                         <i class='bx bx-error-circle'></i>
-                       {{ $message }}
+                        {{ $message }}
                     </p>
                     @enderror
                     <div class="input-box">
@@ -364,8 +365,6 @@
                 inputBox.classList.add('error');
             }
         })
-
-        console.log(formAuth, registerLink, loginLink);
 
         //Formulário de autenticação
         registerLink.addEventListener('click', () => {

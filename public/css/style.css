@@ -635,6 +635,7 @@ aside.active-aside .navbar-side {
     align-items: center;
     padding: 6px;
     margin-top: 10px;
+    margin-bottom: 7px;
     margin-left: -7px;
     border-radius: 20px;
     transition: .3s;
@@ -828,12 +829,17 @@ aside.active-aside .navbar-side {
     font-size: .8em;
     font-weight: 400;
     padding-bottom: 5px;
+    max-width: 300px;
+    white-space: normal;
+    word-wrap: break-word;
     opacity: 1;
+    cursor: default;
+
 }
 
 .task-container li.active .task-details span{
     font-size: .7em;
-
+    width: 180px;
 }
 .task-dropdown {
     margin-top: 5px;
@@ -908,7 +914,7 @@ aside.active-aside .navbar-side {
     z-index: 900
 }
 
-.form-create-task.active-form{
+.form-create-task.active{
     display: flex;
 }
 
@@ -1279,4 +1285,29 @@ aside.active-aside .navbar-side {
     pointer-events: all;
     cursor: pointer;
     color: #9CB9E8;
+}
+
+
+.ajax-response{
+    position: absolute;
+    left: 25px;
+    bottom: -50px;
+    width: 280px;
+    height: 40px;
+    background: #DBDBDB;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    z-index: 5;
+    transition: bottom .3s;
+}
+
+.ajax-response__message{
+    font-size: .8em;
+    font-weight: 500;
+    color: #40444A;
+}
+
+.ajax-response.active{
+    bottom: 40px;
 }
