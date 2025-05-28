@@ -1,6 +1,6 @@
 <div class="info-checked">
     <div class="img">
-        <img src="assets/images/img-checked.svg" alt="all task checked">
+        <img src="{{ asset('/images/all-tasks-completed-dark.svg') }}" alt="all task checked">
     </div>
     <div class="info">
         <p>Todas tarefas Concluidas</p>

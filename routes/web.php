@@ -18,7 +18,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/categoria/criar', [CategoryController::class, 'create']);
 
-        Route::post('/', [CategoryController::class, 'store'])->name('category.store');
+        Route::post('/app', [CategoryController::class, 'store'])->name('category.store');
 
         Route::get('/categoria/{category}', [CategoryController::class, 'show'])->name('category.show');
 
@@ -48,8 +48,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/sair', [LoginController::class, 'logout']);
     });
 
-    Route::get('/email/verificar', function () {
-        return view('auth.verify-email');
+    Route::get('/email/verificar/{email}', function ($email) {
+        return view('auth.verify-email', ['email' => $email]);
     })->name('verification.notice');
 
     Route::get('/email/verificar/{id}/{hash}', function (EmailVerificationRequest $request) {

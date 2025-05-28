@@ -40,5 +40,13 @@ class Category extends Model
          return $this->hasMany(Task::class);
       }
      
+      public function tasksDone(): HasMany
+      {
+         return $this->tasks()->where('completed', true)->orderBy('updated_at', 'desc');
+      }
 
+      public function tasksUndone():HasMany
+      {
+         return $this->tasks()->where('completed', false)->orderBy('created_at', 'desc');
+      }
 }

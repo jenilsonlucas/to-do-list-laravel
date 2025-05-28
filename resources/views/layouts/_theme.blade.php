@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{csrf_token()}}">
     <title>To do list app</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
@@ -56,15 +57,13 @@
                     <div class="caret"></div>
                 </div>
                 <ul class="menu">
-                    <li class="check">
+                    @foreach($categories as $category)
+                    <li class="list__id check" data-id="{{$category->id}}">
                         <div><span class="checkbox"></span>
-                            <span class="menu-item-text">Casa</span></div>
-                        <span class="count">1</span>
+                            <span class="menu-item-text">{{$category->name}}</span></div>
+                        <span class="count">{{$category->tasks()->count()}}</span>
                     </li>
-                    <li>
-                        <div><span class="checkbox"></span><span class="menu-item-text">Familia</span>
-                        </div><span class="count">4</span>
-                    </li>
+                    @endforeach
                 </ul>
             </div>
             <span class="thing-all aside-btn-category"><i class='bx bx-plus'></i>Criar nova lista</span>
@@ -82,23 +81,25 @@
             <div class="icon-close">
                 <span><i class='bx bx-x'></i></span>
             </div>
-            <form action="/angola" method="post">
+            <form action="{{ route('tasks.store') }}" method="post">
                 @csrf
                 @method('POST')
                 <div class="input-box">
                     <span class="icon"></span>
-                    <input type="text" name="nome" placeholder="Adicionar título">
+                    <input type="text" name="name" autocomplete="off" placeholder="Adicionar título">
                 </div>
                 <div class="textarea-box">
                     <span class="icon"><i class='bx bx-menu-alt-left'></i></span>
                     <div>
-                        <textarea name=""></textarea>
+                        <textarea name="description" placeholder="Descrição" autocapitalize="true"></textarea>
                     </div>
                 </div>
                 <div class="select-box">
                     <span class="icon"><i class='bx bx-calendar'></i></span>
-                    <select name="" id="">
-                        <option value="">As minha tarefas</option>
+                    <select name="category_id">
+                        @foreach($categories as $category)
+                        <option value="{{$category->id}}">{{$category->name}}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="btn-task">
@@ -140,6 +141,9 @@
         </div>
     </div>
 
+    <div class="ajax-response {{session('message_flash') ? 'active' : ''}}">
+        <span class="ajax-response__message">{{session('message_flash')}}</span>
+    </div>
  <script src="{{asset('js/script.js')}}"></script>
 </body>
 

@@ -15,7 +15,6 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Auth::user()->categories;
-
         return view('category.list', compact('categories'));
     }
 
@@ -40,7 +39,10 @@ class CategoryController extends Controller
         $validated['user_id'] = Auth::id();
         $category = Category::create($validated);
 
-        return redirect('/app')->with('message', 'Categoria '. $category->name .' criada com sucesso!');
+        return response()->json([
+            "category" => $category,
+            "message" => "Categoria {$category->name} criada com sucesso!"
+        ]);
     }
 
     /**
@@ -68,7 +70,9 @@ class CategoryController extends Controller
               'name' => $request->name,
        ]);
 
-       return redirect('/')->with('message', 'Categoria '. $category->name .' atualizada com sucesso!');
+       return response()->json([
+           "redirect" => url("/app")
+       ]);
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Models\Task;
 use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -37,14 +38,18 @@ class TaskController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'category_id' => 'required|integer|gte:1',
-            'user_id' => 'required|integer|gte:1'
+            'description' => 'string|max:255',
+            'category_id' => 'required|integer|gte:1|exists:categories,id'
         ]);
 
-        Task::create($validated);
+        $validated['user_id'] = Auth::id();
 
-        return redirect('/tarefas')->with("Tarefa salva com succeso!");
+        
+        $task = Task::create($validated);
+
+        return response()->json([ 
+            'task' => $task,
+        ]);
     }
 
     /**
@@ -72,8 +77,6 @@ class TaskController extends Controller
     public function update(Request $request, Task $task)
     {
         $task->update($request->all());
-
-        return redirect()->route('tasks.index')->with('message' ,'Tarefa guardada com sucesso');
     }
 
     /**
@@ -82,7 +85,5 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         $task->delete();
-        
-        return redirect()->route('tasks.index')->with('message', 'tarefa removida com sucesso');
     }
 }
