@@ -7,7 +7,7 @@
     @foreach($categories as $category)
 
     <div class="task-item">
-        <span id="category-{{$category->id}}" style="display: none;"></span>
+        <span id="category-{{$category->id}}" class="list__id" data-id="{{$category->id}}" style="display: none;"></span>
         <div id="task-back-head">
             <div class="task-head">
                 <p>{{$category->name}}</p>
@@ -15,9 +15,9 @@
                     <span class="icon-option" p-title="Opções da lista">⋮</span>
                     <div class="category-options">
                         <div class="box-options">
-                            <span class="change-name">Mudar de nome</span>
-                            <span class="delete-task-done">Eliminar todas as tarefas concluidas</span>
-                            <span class="delete-category">Eliminar a lista</span>
+                            <span class="change-name" data-id="{{$category->id}}" data-action="{{route('category.update', ['category' => $category])}}">Mudar de nome</span>
+                            <span class="delete-task-done" data-id="{{$category->id}}">Eliminar todas as tarefas concluidas</span>
+                            <span class="delete-category {{$category->id == 1 ? 'disable' : ''}}" data-id="{{$category->id}}" data-action="{{route('category.destroy', ['category' => $category])}}">Eliminar a lista</span>
                         </div>
                     </div>
                 </div>
@@ -27,10 +27,18 @@
             </div>
         </div>
         <div class="task-content"></div>
+        @if($category->tasksUndone->isNotEmpty())
         <ul class="task-container first">
             @each('tasks.list', $category->tasksUndone, 'task')
         </ul>
-        <div class="task-dropdown">
+        @elseIf($category->tasksDone->isEmpty())
+            @include('tasks.undone')
+        @else
+            @include('tasks.done')
+        @endif
+
+        @if($category->tasksDone->isNotEmpty())
+        <div class="task-dropdown"> 
             <div class="select">
                 <div class="caret"></div>
                 <span class="selected">Concluidas (<span>{{$category->tasksDone()->count()}}</span>)</span>
@@ -41,6 +49,7 @@
                 @endforeach
             </ul>
         </div>
+        @endif
     </div>
 
     @endforeach

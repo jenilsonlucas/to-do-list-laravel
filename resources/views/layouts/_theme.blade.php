@@ -57,15 +57,13 @@
                     <div class="caret"></div>
                 </div>
                 <ul class="menu">
-                    <li class="check">
+                    @foreach($categories as $category)
+                    <li class="list__id check" data-id="{{$category->id}}">
                         <div><span class="checkbox"></span>
-                            <span class="menu-item-text">Casa</span></div>
-                        <span class="count">1</span>
+                            <span class="menu-item-text">{{$category->name}}</span></div>
+                        <span class="count">{{$category->tasks()->count()}}</span>
                     </li>
-                    <li>
-                        <div><span class="checkbox"></span><span class="menu-item-text">Familia</span>
-                        </div><span class="count">4</span>
-                    </li>
+                    @endforeach
                 </ul>
             </div>
             <span class="thing-all aside-btn-category"><i class='bx bx-plus'></i>Criar nova lista</span>
@@ -143,8 +141,8 @@
         </div>
     </div>
 
-    <div class="ajax-response">
-        <span class="ajax-response__message">Categoria Criada com sucesso</span>
+    <div class="ajax-response {{session('message_flash') ? 'active' : ''}}">
+        <span class="ajax-response__message">{{session('message_flash')}}</span>
     </div>
  <script src="{{asset('js/script.js')}}"></script>
 </body>

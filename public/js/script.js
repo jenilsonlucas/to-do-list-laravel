@@ -2,6 +2,9 @@ const csrf_token = document
     .querySelector('meta[name="csrf-token"]')
     .getAttribute("content");
 
+const url = window.location.origin;
+let callbackResponse = null;
+
 //elementos do formulário de pesquisa
 const formSearch = document.querySelector(".form-search");
 const iconSearch = document.querySelector(".icon-search");
@@ -23,6 +26,9 @@ const inputTask = document.querySelector(".form-create-task .input-box input");
 const textAreaBox = document.querySelector(
     ".form-create-task .textarea-box div"
 );
+
+// const btnSendTask = document.querySelector(".form-create-task");
+
 const textAreaTask = document.querySelector(
     ".form-create-task .textarea-box div textarea"
 );
@@ -57,7 +63,7 @@ const messageCategory = document.querySelector(".message-category");
 //elementos do task item
 const taskItem = document.querySelectorAll(".content .task-item");
 
-taskItem.forEach((task, index) => {
+taskItem.forEach((task) => {
     task.classList.remove("clicked");
     task.addEventListener("click", () => {
         taskItem.forEach((t) => t.classList.remove("clicked"));
@@ -93,6 +99,15 @@ taskItem.forEach((task, index) => {
     });
 
     task.querySelector(".add-task").addEventListener("click", () => {
+        const nomeCategory = task.querySelector(".task-head p").textContent;
+
+        const select = formCreate.querySelector("select");
+        for (let option of select.options) {
+            if (option.text === nomeCategory) {
+                select.value = option.value;
+                break;
+            }
+        }
         formCreate.classList.add("active");
     });
 
@@ -175,7 +190,7 @@ taskItem.forEach((task, index) => {
 
                 count.textContent = String(Number(count.textContent) - 1);
             }
-            deleteTask(btnDelete);
+            deleteTaskCategory(btnDelete, info);
         });
 
         taskText?.addEventListener("click", (e) => {
@@ -218,7 +233,8 @@ taskItem.forEach((task, index) => {
             enterEditMode({ text: details, btnEdit, btnSave });
         });
 
-        details.addEventListener("blur", () => {
+        details.addEventListener("blur", (e) => {
+            e.stopPropagation();
             setTimeout(() => {
                 exitEditMode({ details, btnEdit, btnSave });
             }, 100);
@@ -232,10 +248,22 @@ taskItem.forEach((task, index) => {
         });
     });
 
-    task.querySelector(".change-name").addEventListener("click", () => {
+    task.querySelector(".change-name").addEventListener("click", (e) => {
         const nameCategory = task.querySelector(".task-head p").textContent;
+        let method = formCreateCategory.querySelector('input[name="_method"]');
+        const form = formCreateCategory.querySelector("form");
+        const inputID = document.createElement("input");
+        inputID.type = "hidden";
+        inputID.name = "id";
+        inputID.value = e.target.getAttribute("data-id");
+        form.append(inputID);
+
+        method.value = "PUT";
+
         formCreateCategory.querySelector(".input-box input").value =
             nameCategory;
+        form.setAttribute("action", e.target.getAttribute("data-action"));
+
         formCreateCategory.classList.add("active");
         btnSubmitCategory.classList.add("active");
     });
@@ -248,8 +276,19 @@ taskItem.forEach((task, index) => {
         );
     });
 
-    task.querySelector(".delete-category").addEventListener("click", () => {
-        formEliminate("Desejas eliminar a lista?", "", "Cancelar", "Eliminar");
+    task.querySelector(".delete-category").addEventListener("click", (e) => {
+        formEliminate(
+            "Desejas eliminar a lista?",
+            "",
+            "Cancelar",
+            "Eliminar",
+            () => {
+                const btnDelete = e.target;
+                deleteTaskCategory(btnDelete, task);
+                removeFormTask(btnDelete.getAttribute("data-id"));
+                removeMenuList(btnDelete.getAttribute("data-id"));
+            }
+        );
     });
 });
 
@@ -296,10 +335,16 @@ btnLeavingKeep.addEventListener("click", () => {
 });
 
 btnLeavingLeave.addEventListener("click", () => {
-    leavingFormTask.classList.remove("active");
-    inputTask.value = "";
-    textAreaTask.value = "";
-    formCreate.classList.remove("active");
+    if (callbackResponse) {
+        callbackResponse();
+        callbackResponse = null;
+        leavingFormTask.classList.remove("active");
+    } else {
+        leavingFormTask.classList.remove("active");
+        inputTask.value = "";
+        textAreaTask.value = "";
+        formCreate.classList.remove("active");
+    }
 });
 
 selectDropdow.addEventListener("click", () => {
@@ -310,6 +355,25 @@ selectDropdow.addEventListener("click", () => {
 optionsDropdown.forEach((option) => {
     option.addEventListener("click", () => {
         option.classList.toggle("check");
+        taskItem.forEach((task) => {
+            const idList = task
+                .querySelector(".list__id")
+                .getAttribute("data-id");
+
+            const idMenu = option.getAttribute("data-id");
+
+            if (idList === idMenu) {
+                task.classList.toggle("hidden");
+
+                if (task.classList.contains("hidden")) {
+                    setTimeout(() => {
+                        task.style.display = "none";
+                    }, 500);
+                } else {
+                    task.style.display = "block";
+                }
+            }
+        });
     });
 });
 
@@ -363,7 +427,8 @@ function formEliminate(
     header,
     info = "",
     btn1 = "Cancelar",
-    btn2 = "Rejeitar"
+    btn2 = "Rejeitar",
+    onConfirm = "null"
 ) {
     const form = leavingFormTask;
     const title = form.querySelector(".leaving-task-title");
@@ -384,21 +449,28 @@ function formEliminate(
         message.textContent = info;
         leaving.insertBefore(message, divBtn);
     }
-
+    callbackResponse = onConfirm;
     form.classList.add("active");
 }
-
 document.querySelectorAll('form:not([data-send="false"])').forEach((form) => {
+    if (form.dataset.listenerAttached === "true") return; // evita duplicar listener
+    form.dataset.listenerAttached = "true";
+
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
         const flash = document.querySelector(".ajax-response");
         const message = flash.querySelector(".ajax-response__message");
         const parent = form.closest(".active");
         const formData = new FormData(form);
-        if (!formData.get("description"))
+        if (
+            formData.has("description") &&
+            !formData.get("description").trim()
+        ) {
             formData.set("description", "Descrição");
-        const action = this.getAttribute("action");
-        const method = this.getAttribute("method").toUpperCase();
+        }
+
+        const action = form.getAttribute("action");
+        const method = form.getAttribute("method").toUpperCase();
 
         const myheaders = new Headers({
             Accept: "application/json",
@@ -409,7 +481,6 @@ document.querySelectorAll('form:not([data-send="false"])').forEach((form) => {
             headers: myheaders,
             body: formData,
         };
-
         try {
             const response = await fetch(action, options);
             if (!response.ok) {
@@ -418,8 +489,12 @@ document.querySelectorAll('form:not([data-send="false"])').forEach((form) => {
 
             parent.classList.remove("active");
             const data = await response.json();
-            if (data.task) addTask(data.task);
-
+            if (data.category) addCategory(data.category);
+            else if(data.task) addTask(data.task);
+            if(data.redirect) {
+                window.location.href = data.redirect;
+                return;
+            }    
             if (data.message) {
                 message.innerHTML = data.message;
                 flash.classList.add("active");
@@ -428,6 +503,8 @@ document.querySelectorAll('form:not([data-send="false"])').forEach((form) => {
             setTimeout(() => {
                 flash.classList.remove("active");
             }, 3000);
+
+
         } catch (error) {
             console.error(error.message);
         }
@@ -436,8 +513,6 @@ document.querySelectorAll('form:not([data-send="false"])').forEach((form) => {
 });
 
 function addTask(task) {
-    const url = window.location.origin;
-
     const categoryId = task.category_id;
     const categoryContainer = document.querySelector(`#category-${categoryId}`);
 
@@ -551,11 +626,13 @@ function addTask(task) {
         const container = btnDelete.closest(".task-container");
 
         if (!container.classList.contains("first")) {
-            const count = categoryContainer.parentElement.querySelector(".select .selected span");
+            const count = categoryContainer.parentElement.querySelector(
+                ".select .selected span"
+            );
 
             count.textContent = String(Number(count.textContent) - 1);
         }
-        deleteTask(btnDelete);
+        deleteTaskCategory(btnDelete, li);
     });
     btnEdit.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -610,6 +687,202 @@ function addTask(task) {
             .forEach((i) => i.classList.remove("active"));
 
         if (!isActive) li.classList.add("active");
+    });
+}
+
+function addCategory(category) {
+    const containerList = document.querySelector(".content .tasks-list");
+    const taskItem = document.createElement("div");
+    taskItem.classList.add("task-item");
+
+    const hiddenSpan = document.createElement("span");
+    hiddenSpan.id = `category-${category.id}`;
+    hiddenSpan.className = "list__id";
+    hiddenSpan.dataset.id = category.id;
+    hiddenSpan.style.display = "none";
+    taskItem.appendChild(hiddenSpan);
+
+    const taskBackHead = document.createElement("div");
+    taskBackHead.id = "task-back-head";
+
+    const taskHead = document.createElement("div");
+    taskHead.className = "task-head";
+
+    const categoryName = document.createElement("p");
+    categoryName.textContent = category.name;
+
+    const options = document.createElement("div");
+    options.className = "options";
+
+    const iconOption = document.createElement("span");
+    iconOption.className = "icon-option";
+    iconOption.setAttribute("p-title", "Opções da lista");
+    iconOption.textContent = "⋮";
+
+    const categoryOptions = document.createElement("div");
+    categoryOptions.className = "category-options";
+
+    const boxOptions = document.createElement("div");
+    boxOptions.className = "box-options";
+
+    const changeName = document.createElement("span");
+    changeName.className = "change-name";
+    changeName.textContent = "Mudar de nome";
+
+    const deleteDone = document.createElement("span");
+    deleteDone.className = "delete-task-done";
+    deleteDone.textContent = "Eliminar todas as tarefas concluidas";
+
+    const deleteCategory = document.createElement("span");
+    deleteCategory.className = "delete-category";
+    deleteCategory.textContent = "Eliminar a lista";
+
+    boxOptions.append(changeName, deleteDone, deleteCategory);
+    categoryOptions.appendChild(boxOptions);
+    options.append(iconOption, categoryOptions);
+
+    taskHead.append(categoryName, options);
+    taskBackHead.appendChild(taskHead);
+
+    const addTask = document.createElement("div");
+    addTask.className = "add-task";
+
+    const iconAdd = document.createElement("i");
+    iconAdd.className = "bx bx-chevron-down-circle";
+
+    const spanAdd = document.createElement("span");
+    spanAdd.textContent = "Adicionar uma tarefa";
+
+    addTask.append(iconAdd, spanAdd);
+    taskBackHead.appendChild(addTask);
+
+    const taskContent = document.createElement("div");
+    taskContent.className = "task-content";
+
+    const noTasks = document.createElement("div");
+    noTasks.className = "no-tasks";
+
+    const img = document.createElement("img");
+    img.src = url + "/images/empty-tasks-dark.svg";
+    img.alt = "";
+
+    const noTasksHead = document.createElement("div");
+    noTasksHead.className = "no-tasks-head";
+
+    const h3 = document.createElement("h3");
+    h3.textContent = "Ainda não tem tarefas";
+
+    const p = document.createElement("p");
+    p.textContent = "Adicione tarefas para fazer e monitorize-as no To do List";
+
+    noTasksHead.append(h3, p);
+    noTasks.append(img, noTasksHead);
+
+    taskItem.append(taskBackHead, taskContent, noTasks);
+
+    containerList.append(taskItem);
+
+    taskItem.querySelector(".add-task").addEventListener("click", () => {
+        const nomeCategory = taskItem.querySelector(".task-head p").textContent;
+
+        const select = formCreate.querySelector("select");
+        for (let option of select.options) {
+            if (option.text === nomeCategory) {
+                select.value = option.value;
+                break;
+            }
+        }
+        formCreate.classList.add("active");
+    });
+
+    taskItem.classList.remove("clicked");
+    taskItem.addEventListener("click", () => {
+        document
+            .querySelectorAll(".content .task-item")
+            .forEach((t) => t.classList.remove("clicked"));
+        taskItem.classList.add("clicked");
+    });
+
+    taskItem.querySelector(".icon-option").addEventListener("click", () => {
+        const isActive = taskItem
+            .querySelector(".icon-option")
+            .classList.contains("active");
+        document
+            .querySelectorAll(".task-item .icon-option")
+            .forEach((i) => i.classList.remove("active"));
+        document
+            .querySelectorAll(".task-item .category-options")
+            .forEach((opt) => opt.classList.remove("active"));
+        if (!isActive) {
+            taskItem.querySelector(".icon-option").classList.add("active");
+            taskItem.querySelector(".category-options").classList.add("active");
+        }
+    });
+    updatedFormTask(category);
+    updatedMenuList(category, taskItem);
+}
+
+function updatedFormTask(category) {
+    const select = formCreate.querySelector("select");
+
+    const option = document.createElement("option");
+    option.value = category.id;
+    option.text = category.name;
+
+    select.append(option);
+}
+
+function updatedMenuList(category, task) {
+    const li = document.createElement("li");
+    li.classList.add("list__id");
+    li.dataset.id = category.id;
+
+    const div = document.createElement("div");
+    const spanCheckBox = document.createElement("span");
+    spanCheckBox.classList.add("checkbox");
+    const categoryName = document.createElement("span");
+    categoryName.classList.add("menu-item-text");
+    categoryName.textContent = category.name;
+    div.append(spanCheckBox, categoryName);
+    const spanCounter = document.createElement("span");
+    spanCounter.classList.add("counter");
+    spanCounter.textContent = "0";
+
+    li.append(div, spanCounter);
+
+    menuDropdown.append(li);
+
+    li.addEventListener("click", () => {
+        li.classList.toggle("check");
+        task.classList.toggle("hidden");
+
+        if (task.classList.contains("hidden")) {
+            setTimeout(() => {
+                task.style.display = "none";
+            }, 500);
+        } else {
+            task.style.display = "block";
+        }
+    });
+}
+
+function removeFormTask(id) {
+    const select = formCreate.querySelector("select");
+
+    for (let option of select.options) {
+        if (option.value === id) {
+            option.remove();
+        }
+    }
+}
+
+function removeMenuList(id) {
+    const li = menuDropdown.querySelectorAll("li");
+
+    li.forEach((l) => {
+        if (l.getAttribute("data-id") == id) {
+            l.remove();
+        }
     });
 }
 
@@ -689,7 +962,7 @@ function exitEditMode({ details, taskText, textOld, btnEdit, btnSave }) {
     }
 }
 
-function deleteTask(btnDelete) {
+function deleteTaskCategory(btnDelete, father) {
     const action = btnDelete.getAttribute("data-action");
     const id = btnDelete.getAttribute("data-id");
     const csrf = csrf_token;
@@ -699,8 +972,20 @@ function deleteTask(btnDelete) {
         _token: csrf,
         _method: "DELETE",
     };
+
     if (sendModal(action, data)) {
-        const liTask = btnDelete.closest("li");
-        liTask.remove();
+        father.remove();
     }
 }
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const flash = document.querySelector(".ajax-response");
+
+
+    if (flash && flash.classList.contains("active")) {
+        setTimeout(() => {
+            flash.classList.remove("active");
+        }, 3000);
+    }
+});
