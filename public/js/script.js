@@ -1327,3 +1327,15 @@ function hiddenAllLists(){
 
     document.querySelector('.list-ghost').classList.add('active');
 }
+
+/**
+ * updated image profile
+ */
+
+const updateUser = document.querySelector('.settings__content__form');
+const imgForm = updateUser?.querySelector('.form__img');
+const inputFile = updateUser?.querySelector('#file');
+
+inputFile?.addEventListener('change', () => {
+    imgForm.src = URL.createObjectURL(inputFile.files[0]);
+})

@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -45,7 +46,12 @@ Route::middleware(['auth'])->group(function () {
 
         Route::delete('/tarefas/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
+        
+        Route::get('/perfil', [UserController::class, 'edit'])->name('user.edit');    
+        Route::post('/perfil/{user}', [UserController::class, 'update'])->name('user.update');    
         Route::get('/sair', [LoginController::class, 'logout']);
+
+
     });
 
     Route::get('/email/verificar/{email}', function ($email) {

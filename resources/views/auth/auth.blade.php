@@ -40,9 +40,9 @@
             height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end;
             flex-direction: column;
-            gap: 30px;
+            gap: 15px;
         }
 
         .content-auth .logo {
@@ -56,7 +56,8 @@
         }
 
         .form-auth {
-            width: 370px;
+            width: 350px;
+            
         }
 
         .form-auth .form-box {
@@ -81,10 +82,11 @@
         }
 
         .form-auth .form-box .form-title {
-            font-size: 2em;
+            font-size: 1.8em;
             font-weight: 500;
             color: #DBDBDB;
-            margin-bottom: 30px;
+            margin-bottom: 5px;
+            padding: 0px 30px;
             pointer-events: none;
             user-select: none;
             text-align: center;
@@ -193,7 +195,7 @@
 
         .midia-options .btn {
             display: inline-block;
-            width: 370px;
+            width: 350px;
             height: 50px;
             border-radius: 50px;
             border: none;
@@ -204,7 +206,7 @@
             color: #DBDBDB;
             font-weight: 400;
             cursor: pointer;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             padding: 8px 20px;
@@ -225,6 +227,10 @@
             height: 20px;
             object-fit: cover;
             margin-right: 12px;
+        }
+
+        .midia-options{
+            margin-bottom: 10px;
         }
 
         .message {

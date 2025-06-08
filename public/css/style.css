@@ -439,10 +439,10 @@ aside.active-aside .navbar-side {
     padding: 10px;
     overscroll-behavior: none;
     transition: all 0.5s ease-in-out;
-    transition-delay: 0.3s ;
+    transition-delay: 0.3s;
 }
 
-.content .tasks-list.active{
+.content .tasks-list.active {
     display: none;
 }
 
@@ -460,12 +460,11 @@ aside.active-aside .navbar-side {
     overflow: hidden;
     background: var(--primary-color);
     transition: all 0.1s ease-in-out;
-    
 }
 
-.content .list-ghost.active{
+.content .list-ghost.active {
     top: 0;
-    transition-delay: .6s;
+    transition-delay: 0.6s;
 }
 
 .content .list-ghost span {
@@ -1332,4 +1331,117 @@ aside.active-aside .navbar-side {
 
 .ajax-response.active {
     bottom: 40px;
+}
+
+/** Settigns Style */
+.settings {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    max-width: 97%;
+    max-height: 87%;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    gap: 45px;
+}
+
+.settings__head span {
+    font-size: 2em;
+    font-weight: 500;
+    pointer-events: none;
+    color: #dbdbdb;
+}
+
+.settings__content {
+    background: #131314;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    height: 100%;
+    border-radius: 8px;
+    padding: 20px 30px;
+}
+
+.settings__content__form form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.settings__content__form .form__text .input-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.settings__content__form .form__text .input-box label {
+    color: #484d53;
+    user-select: none;
+    font-weight: 500;
+}
+
+.settings__content__form .form__text .input-box input {
+    width: 280px;
+    height: 35px;
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    outline: none;
+    font-weight: 500;
+    font-size: 1em;
+    border-radius: 8px;
+    color: #dbdbdb;
+    padding: 0 10px;
+}
+
+.settings__content__form .form__others {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px;
+}
+
+.settings__content__form .form__others img {
+    display: block;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+.settings__content__form .form__others input {
+    display: none;
+}
+
+.settings__content__form .form__others .btn-update {
+    width: 100%;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    outline: none;
+    background: var(--primary-color);
+    font-size: 1.1em;
+    border-radius: 8px;
+    color: #dbdbdb;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.settings__content__form .form__others .btn-update:hover {
+    background: #282928;
+}
+
+.message {
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    margin-top: -20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.message.error {
+    color: #c69795;
 }

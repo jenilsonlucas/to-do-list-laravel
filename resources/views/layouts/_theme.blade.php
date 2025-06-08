@@ -34,11 +34,11 @@
                 </form>
             </div>
             <div class="info-icons">
-                <a href="#"><i class='bx bx-cog'></i></a>
+                <a href="{{route('user.edit')}}"><i class='bx bx-cog'></i></a>
             </div>
             <div class="profile">
                 <div class="img">
-                    <img src="{{asset('/images/profile.jpeg')}}">
+                    <img src="{{asset(Auth::user()->image)}}">
                 </div>
             </div>
 
