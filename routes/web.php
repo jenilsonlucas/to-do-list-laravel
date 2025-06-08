@@ -28,6 +28,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::delete('/categoria/{category}', [CategoryController::class, 'destroy'])->name('category.destroy');
 
+        Route::delete('/categoria/{category}/tasks/done', [CategoryController::class, 'destroyDoneTasks'])->name('category.tasks.done.destroy');
+
 
         // Task Routes
 

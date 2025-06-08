@@ -4,6 +4,7 @@ const csrf_token = document
 
 const url = window.location.origin;
 let callbackResponse = null;
+let updated = false;
 
 //elementos do formulário de pesquisa
 const formSearch = document.querySelector(".form-search");
@@ -61,12 +62,11 @@ const btnSubmitCategory = document.querySelector(
 const messageCategory = document.querySelector(".message-category");
 
 //elementos do task item
-const taskItem = document.querySelectorAll(".content .task-item");
+const taskItems = document.querySelectorAll(".content .task-item");
 
-taskItem.forEach((task) => {
-    task.classList.remove("clicked");
+taskItems.forEach((task) => {
     task.addEventListener("click", () => {
-        taskItem.forEach((t) => t.classList.remove("clicked"));
+        taskItems.forEach((t) => t.classList.remove("clicked"));
         task.classList.add("clicked");
     });
 
@@ -127,26 +127,46 @@ taskItem.forEach((task) => {
                     _method: "PUT",
                 };
                 if (sendModal(action, data)) {
+                    addContainerDone(task);
                     const li = check.closest("li");
                     const count = task.querySelector(".select .selected span");
-
+                    var container;
                     if (status) {
                         count.textContent = String(
                             Number(count.textContent) + 1
                         );
                         check.setAttribute("data-status", "1");
-                        var container =
-                            task.querySelectorAll(".task-container")[1];
+                        container = task.querySelector(".task-container--done");
                     } else {
                         count.textContent = String(
                             Number(count.textContent) - 1
                         );
+
+                        removeDoneTask(task);
                         check.setAttribute("data-status", "0");
-                        var container = task.querySelector(
-                            ".task-container.first"
-                        );
+                        if (!task.querySelector(".task_container--undone")) {
+                            container = document.createElement("div");
+                            container.classList.add(
+                                "task-container",
+                                "first",
+                                "task_container--undone"
+                            );
+                            const dropdown =
+                                task.querySelector(".task-dropdown");
+                            removeDoneTask(task);
+                            task.insertBefore(container, dropdown);
+                        } else {
+                            container = task.querySelector(
+                                ".task_container--undone"
+                            );
+                        }
                     }
+                    task.querySelectorAll(".task-container li").forEach((i) =>
+                        i.classList.remove("active")
+                    );
+                    li.classList.add("active");
                     container.prepend(li);
+                    addDoneTask(task);
                 }
             });
         }
@@ -180,6 +200,7 @@ taskItem.forEach((task) => {
         const btnEdit = info.querySelector(".btn.edit");
         const btnSave = info.querySelector(".btn.save");
         const btnDelete = info.querySelector(".btn.delete");
+        const id = task.querySelector(".list__id");
         const textOld = taskText.textContent;
 
         btnDelete.addEventListener("click", () => {
@@ -190,7 +211,17 @@ taskItem.forEach((task) => {
 
                 count.textContent = String(Number(count.textContent) - 1);
             }
-            deleteTaskCategory(btnDelete, info);
+            deleteTaskCategory(btnDelete, info.closest("li"));
+
+            let count = document.querySelector(
+                `.dropdown .menu li[data-id="${id.getAttribute(
+                    "data-id"
+                )}"] .count`
+            );
+            count.textContent = Number(count.textContent) - 1;
+
+            addNoTask(task);
+            addDoneTask(task);
         });
 
         taskText?.addEventListener("click", (e) => {
@@ -252,11 +283,6 @@ taskItem.forEach((task) => {
         const nameCategory = task.querySelector(".task-head p").textContent;
         let method = formCreateCategory.querySelector('input[name="_method"]');
         const form = formCreateCategory.querySelector("form");
-        const inputID = document.createElement("input");
-        inputID.type = "hidden";
-        inputID.name = "id";
-        inputID.value = e.target.getAttribute("data-id");
-        form.append(inputID);
 
         method.value = "PUT";
 
@@ -267,12 +293,16 @@ taskItem.forEach((task) => {
         formCreateCategory.classList.add("active");
         btnSubmitCategory.classList.add("active");
     });
-    task.querySelector(".delete-task-done").addEventListener("click", () => {
+    task.querySelector(".delete-task-done").addEventListener("click", (e) => {
         formEliminate(
             "Elimine tarefas concluídas",
             "Todas as tarefas concluídas vão ser eliminadas permanentemente desta lista",
             "Cancelar",
-            "Eliminar"
+            "Eliminar",
+            () => {
+                const btnDelete = e.target;
+                deleteTaskCategory(btnDelete);
+            }
         );
     });
 
@@ -355,7 +385,7 @@ selectDropdow.addEventListener("click", () => {
 optionsDropdown.forEach((option) => {
     option.addEventListener("click", () => {
         option.classList.toggle("check");
-        taskItem.forEach((task) => {
+        taskItems.forEach((task) => {
             const idList = task
                 .querySelector(".list__id")
                 .getAttribute("data-id");
@@ -373,6 +403,8 @@ optionsDropdown.forEach((option) => {
                     task.style.display = "block";
                 }
             }
+
+            hiddenAllLists();
         });
     });
 });
@@ -428,7 +460,7 @@ function formEliminate(
     info = "",
     btn1 = "Cancelar",
     btn2 = "Rejeitar",
-    onConfirm = "null"
+    onConfirm = null
 ) {
     const form = leavingFormTask;
     const title = form.querySelector(".leaving-task-title");
@@ -490,11 +522,11 @@ document.querySelectorAll('form:not([data-send="false"])').forEach((form) => {
             parent.classList.remove("active");
             const data = await response.json();
             if (data.category) addCategory(data.category);
-            else if(data.task) addTask(data.task);
-            if(data.redirect) {
+            else if (data.task) addTask(data.task);
+            if (data.redirect) {
                 window.location.href = data.redirect;
                 return;
-            }    
+            }
             if (data.message) {
                 message.innerHTML = data.message;
                 flash.classList.add("active");
@@ -503,8 +535,6 @@ document.querySelectorAll('form:not([data-send="false"])').forEach((form) => {
             setTimeout(() => {
                 flash.classList.remove("active");
             }, 3000);
-
-
         } catch (error) {
             console.error(error.message);
         }
@@ -516,9 +546,26 @@ function addTask(task) {
     const categoryId = task.category_id;
     const categoryContainer = document.querySelector(`#category-${categoryId}`);
 
-    const taskContainer = categoryContainer.parentElement.querySelector(
+    removeNoTask(categoryContainer.parentElement);
+    removeDoneTask(categoryContainer.parentElement);
+    let taskContainer = categoryContainer.parentElement.querySelector(
         ".task-container.first"
     );
+
+    if (!taskContainer) {
+        const container = document.createElement("div");
+        container.classList.add(
+            "task-container",
+            "first",
+            "task_container--undone"
+        );
+        const dropdown =
+            categoryContainer.parentElement.querySelector(".task-dropdown");
+        if (dropdown) {
+            categoryContainer.parentElement.insertBefore(container, dropdown);
+        }
+        taskContainer = container;
+    }
     const li = document.createElement("li");
 
     const infoDiv = document.createElement("div");
@@ -579,10 +626,19 @@ function addTask(task) {
     taskDetailsDiv.append(i);
     taskDetailsDiv.append(details);
 
+    document.querySelectorAll(".task-container li").forEach((i) => {
+        i.classList.remove("active");
+    });
     li.classList.add("active");
     li.append(infoDiv);
     li.append(taskDetailsDiv);
+
     taskContainer.prepend(li);
+
+    let count = document.querySelector(
+        `.dropdown .menu li[data-id="${categoryId}"] .count`
+    );
+    count.textContent = Number(count.textContent) + 1;
 
     checkbox.addEventListener("click", () => {
         checkbox.closest(".check").classList.toggle("checked");
@@ -598,6 +654,8 @@ function addTask(task) {
             _method: "PUT",
         };
         if (sendModal(action, data)) {
+            addContainerDone(categoryContainer.parentElement);
+            addDoneTask(categoryContainer.parentElement);
             const li = checkbox.closest("li");
             const count = categoryContainer.parentElement.querySelector(
                 ".select .selected span"
@@ -606,16 +664,38 @@ function addTask(task) {
             if (status) {
                 count.textContent = String(Number(count.textContent) + 1);
                 checkbox.setAttribute("data-status", "1");
-                var container =
-                    categoryContainer.parentElement.querySelectorAll(
-                        ".task-container"
-                    )[1];
+                var container = categoryContainer.parentElement.querySelector(
+                    ".task-container--done"
+                );
             } else {
                 count.textContent = String(Number(count.textContent) - 1);
                 checkbox.setAttribute("data-status", "0");
-                var container = categoryContainer.parentElement.querySelector(
-                    ".task-container.first"
-                );
+                removeDoneTask(categoryContainer.parentElement);
+                if (
+                    !categoryContainer.parentElement.querySelector(
+                        ".task_container--undone"
+                    )
+                ) {
+                    container = document.createElement("div");
+                    container.classList.add(
+                        "task-container",
+                        "first",
+                        "task_container--undone"
+                    );
+                    const dropdown =
+                        categoryContainer.parentElement.querySelector(
+                            ".task-dropdown"
+                        );
+                    removeDoneTask(categoryContainer.parentElement);
+                    categoryContainer.parentElement.insertBefore(
+                        container,
+                        dropdown
+                    );
+                } else {
+                    container = categoryContainer.parentElement.querySelector(
+                        ".task_container--undone"
+                    );
+                }
             }
             container.prepend(li);
         }
@@ -633,7 +713,16 @@ function addTask(task) {
             count.textContent = String(Number(count.textContent) - 1);
         }
         deleteTaskCategory(btnDelete, li);
+
+        let count = document.querySelector(
+            `.dropdown .menu li[data-id="${categoryId}"] .count`
+        );
+        count.textContent = Number(count.textContent) - 1;
+
+        addNoTask(categoryContainer.parentElement);
+        addDoneTask(categoryContainer.parentElement);
     });
+
     btnEdit.addEventListener("click", (e) => {
         e.stopPropagation();
         enterEditMode({ text: taskText, btnEdit, btnSave });
@@ -697,7 +786,7 @@ function addCategory(category) {
 
     const hiddenSpan = document.createElement("span");
     hiddenSpan.id = `category-${category.id}`;
-    hiddenSpan.className = "list__id";
+    hiddenSpan.classList.add("list__id");
     hiddenSpan.dataset.id = category.id;
     hiddenSpan.style.display = "none";
     taskItem.appendChild(hiddenSpan);
@@ -726,16 +815,28 @@ function addCategory(category) {
     boxOptions.className = "box-options";
 
     const changeName = document.createElement("span");
-    changeName.className = "change-name";
+    changeName.classList.add("change-name");
     changeName.textContent = "Mudar de nome";
+    changeName.setAttribute("data-action", url + `/categoria/${category.id}`);
+    changeName.dataset.id = category.id;
 
     const deleteDone = document.createElement("span");
     deleteDone.className = "delete-task-done";
     deleteDone.textContent = "Eliminar todas as tarefas concluidas";
+    deleteDone.setAttribute(
+        "data-action",
+        url + `/categoria/${category.id}/tasks/done`
+    );
+    deleteDone.dataset.id = category.id;
 
     const deleteCategory = document.createElement("span");
     deleteCategory.className = "delete-category";
     deleteCategory.textContent = "Eliminar a lista";
+    deleteCategory.setAttribute(
+        "data-action",
+        url + `/categoria/${category.id}`
+    );
+    deleteCategory.dataset.id = category.id;
 
     boxOptions.append(changeName, deleteDone, deleteCategory);
     categoryOptions.appendChild(boxOptions);
@@ -780,7 +881,56 @@ function addCategory(category) {
 
     taskItem.append(taskBackHead, taskContent, noTasks);
 
+    taskItems.forEach((t) => t.classList.remove("clicked"));
+    taskItem.classList.add("clicked");
+
     containerList.append(taskItem);
+
+    taskItem.querySelector(".change-name").addEventListener("click", (e) => {
+        const nameCategory = taskItem.querySelector(".task-head p").textContent;
+        let method = formCreateCategory.querySelector('input[name="_method"]');
+        const form = formCreateCategory.querySelector("form");
+
+        method.value = "PUT";
+
+        formCreateCategory.querySelector(".input-box input").value =
+            nameCategory;
+        form.setAttribute("action", e.target.getAttribute("data-action"));
+
+        formCreateCategory.classList.add("active");
+        btnSubmitCategory.classList.add("active");
+    });
+    taskItem
+        .querySelector(".delete-task-done")
+        .addEventListener("click", (e) => {
+            formEliminate(
+                "Elimine tarefas concluídas",
+                "Todas as tarefas concluídas vão ser eliminadas permanentemente desta lista",
+                "Cancelar",
+                "Eliminar",
+                () => {
+                    const btnDelete = e.target;
+                    deleteTaskCategory(btnDelete);
+                }
+            );
+        });
+
+    taskItem
+        .querySelector(".delete-category")
+        .addEventListener("click", (e) => {
+            formEliminate(
+                "Desejas eliminar a lista?",
+                "",
+                "Cancelar",
+                "Eliminar",
+                () => {
+                    const btnDelete = e.target;
+                    deleteTaskCategory(btnDelete, taskItem);
+                    removeFormTask(btnDelete.getAttribute("data-id"));
+                    removeMenuList(btnDelete.getAttribute("data-id"));
+                }
+            );
+        });
 
     taskItem.querySelector(".add-task").addEventListener("click", () => {
         const nomeCategory = taskItem.querySelector(".task-head p").textContent;
@@ -834,7 +984,7 @@ function updatedFormTask(category) {
 
 function updatedMenuList(category, task) {
     const li = document.createElement("li");
-    li.classList.add("list__id");
+    li.classList.add("list__id", "check");
     li.dataset.id = category.id;
 
     const div = document.createElement("div");
@@ -903,11 +1053,16 @@ async function sendModal(actionModal, dataModal) {
     try {
         const response = await fetch(actionModal, options);
 
-        if (response.ok) {
-            return 1;
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
         }
 
-        throw new Error(`HTTP error: ${response.status}`);
+        const data = await response.json();
+        if (data.redirect) {
+            window.location.href = data.redirect;
+            return;
+        }
+
     } catch (error) {
         console.error("error ao enviar:", error);
         return 0;
@@ -962,7 +1117,7 @@ function exitEditMode({ details, taskText, textOld, btnEdit, btnSave }) {
     }
 }
 
-function deleteTaskCategory(btnDelete, father) {
+function deleteTaskCategory(btnDelete, father = null) {
     const action = btnDelete.getAttribute("data-action");
     const id = btnDelete.getAttribute("data-id");
     const csrf = csrf_token;
@@ -974,14 +1129,12 @@ function deleteTaskCategory(btnDelete, father) {
     };
 
     if (sendModal(action, data)) {
-        father.remove();
+        if (father) father.remove();
     }
 }
 
-
 document.addEventListener("DOMContentLoaded", () => {
     const flash = document.querySelector(".ajax-response");
-
 
     if (flash && flash.classList.contains("active")) {
         setTimeout(() => {
@@ -989,3 +1142,188 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 3000);
     }
 });
+
+function addContainerDone(list) {
+    if (list.querySelector(".task-dropdown")) {
+        return;
+    }
+
+    const taskDropdown = document.createElement("div");
+    taskDropdown.className = "task-dropdown";
+
+    const selectDiv = document.createElement("div");
+    selectDiv.className = "select";
+
+    const caretDiv = document.createElement("div");
+    caretDiv.className = "caret";
+
+    const selectedSpan = document.createElement("span");
+    selectedSpan.className = "selected";
+    selectedSpan.textContent = "Concluidas (";
+
+    const countSpan = document.createElement("span");
+    countSpan.textContent = "0";
+
+    selectedSpan.appendChild(countSpan);
+    selectedSpan.append(")");
+
+    selectDiv.appendChild(caretDiv);
+    selectDiv.appendChild(selectedSpan);
+
+    const taskContainer = document.createElement("ul");
+    taskContainer.classList.add("task-container", "task-container--done");
+
+    taskDropdown.appendChild(selectDiv);
+    taskDropdown.appendChild(taskContainer);
+
+    list.append(taskDropdown);
+}
+
+function addDoneTask(list) {
+    const done = list.querySelector(".task-container--done");
+    const undone = list.querySelector(".task_container--undone");
+    const doneTemplate = list.querySelector(".info-checked");
+
+    if (
+        done?.children.length === 0 ||
+        undone?.children.length !== 0 ||
+        doneTemplate
+    )
+        return;
+
+    const infoChecked = document.createElement("div");
+    infoChecked.className = "info-checked";
+
+    const imgDiv = document.createElement("div");
+    imgDiv.className = "img";
+
+    const img = document.createElement("img");
+    img.src = url + "/images/all-tasks-completed-dark.svg";
+    img.alt = "all task checked";
+
+    imgDiv.appendChild(img);
+
+    const infoDiv = document.createElement("div");
+    infoDiv.className = "info";
+
+    const p = document.createElement("p");
+    p.textContent = "Todas tarefas Concluidas";
+
+    const span = document.createElement("span");
+    span.textContent = "Bom trabalho!";
+
+    infoDiv.append(p, span);
+
+    infoChecked.append(imgDiv, infoDiv);
+    const dropdown = list.querySelector(".task-dropdown");
+
+    list.insertBefore(infoChecked, dropdown);
+}
+
+function removeDoneTask(list) {
+    if (!list.querySelector(".info-checked")) {
+        return;
+    }
+
+    const done = list.querySelector(".info-checked");
+    done.remove();
+}
+
+function removeNoTask(list) {
+    if (!list.querySelector(".no-tasks")) {
+        return;
+    }
+
+    const noTask = list.querySelector(".no-tasks");
+    noTask.remove();
+
+    const taskContainer = document.createElement("ul");
+    taskContainer.classList.add("task-container", "first");
+
+    list.append(taskContainer);
+}
+
+function addNoTask(list) {
+    const done = list.querySelector(".task-container--done");
+    const undone = list.querySelector(".task_container--undone");
+
+    if (done?.children.length !== 0 || undone?.children.length !== 0) return;
+
+    done.remove();
+    undone.remove();
+
+    if (list.querySelector(".task-dropdown"))
+        list.querySelector(".task-dropdown").remove();
+
+    const allDone = list.querySelector(".info-checked");
+    if (allDone) allDone.remove();
+
+    const existingMessage = list.querySelector(".no-tasks");
+    if (existingMessage) existingMessage.remove();
+
+    const noTasks = document.createElement("div");
+    noTasks.className = "no-tasks";
+
+    const img = document.createElement("img");
+    img.src = url + "/images/empty-tasks-dark.svg";
+    img.alt = "";
+
+    const noTasksHead = document.createElement("div");
+    noTasksHead.className = "no-tasks-head";
+
+    const h3 = document.createElement("h3");
+    h3.textContent = "Ainda não tem tarefas";
+
+    const p = document.createElement("p");
+    p.textContent = "Adicione tarefas para fazer e monitorize-as no To do List";
+
+    noTasksHead.append(h3, p);
+    noTasks.append(img, noTasksHead);
+
+    list.append(noTasks);
+}
+
+function dropdownTaskDone(list) {
+    const taskDropdown = document.createElement("div");
+    taskDropdown.classList.add("task-dropdown");
+
+    const selectDiv = document.createElement("div");
+    selectDiv.classList.add("select");
+
+    const caretDiv = document.createElement("div");
+    caretDiv.classList.add("caret");
+
+    const selectedSpan = document.createElement("span");
+    selectedSpan.classList.add("selected");
+    selectedSpan.textContent = "Concluidas (";
+
+    const countSpan = document.createElement("span");
+    countSpan.textContent = "0"; // Substitua por qualquer número desejado
+
+    selectedSpan.appendChild(countSpan);
+    selectedSpan.append(")");
+
+    const taskList = document.createElement("ul");
+    taskList.classList.add("task-container", "task-container--done");
+
+    selectDiv.appendChild(caretDiv);
+    selectDiv.appendChild(selectedSpan);
+    taskDropdown.appendChild(selectDiv);
+    taskDropdown.appendChild(taskList);
+
+    list.appendChild(taskDropdown);
+}
+
+
+function hiddenAllLists(){
+    const allHidden = Array.from(taskItems).every( 
+        (list) => list.classList.contains("hidden")
+    );
+
+
+    document.querySelector('.list-ghost').classList.remove('active');
+
+    if(!allHidden) return;
+
+    document.querySelector('.list-ghost').classList.add('active');
+}

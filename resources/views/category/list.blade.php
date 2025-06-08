@@ -12,11 +12,11 @@
             <div class="task-head">
                 <p>{{$category->name}}</p>
                 <div class="options">
-                    <span class="icon-option" p-title="Opções da lista">⋮</span>
+                    <span class="icon-option">⋮</span>
                     <div class="category-options">
                         <div class="box-options">
                             <span class="change-name" data-id="{{$category->id}}" data-action="{{route('category.update', ['category' => $category])}}">Mudar de nome</span>
-                            <span class="delete-task-done" data-id="{{$category->id}}">Eliminar todas as tarefas concluidas</span>
+                            <span class="delete-task-done" data-id="{{$category->id}}" data-action="{{route('category.tasks.done.destroy', ['category' => $category])}}">Eliminar todas as tarefas concluidas</span>
                             <span class="delete-category {{$category->id == 1 ? 'disable' : ''}}" data-id="{{$category->id}}" data-action="{{route('category.destroy', ['category' => $category])}}">Eliminar a lista</span>
                         </div>
                     </div>
@@ -28,7 +28,7 @@
         </div>
         <div class="task-content"></div>
         @if($category->tasksUndone->isNotEmpty())
-        <ul class="task-container first">
+        <ul class="task-container first task_container--undone">
             @each('tasks.list', $category->tasksUndone, 'task')
         </ul>
         @elseIf($category->tasksDone->isEmpty())
@@ -43,7 +43,7 @@
                 <div class="caret"></div>
                 <span class="selected">Concluidas (<span>{{$category->tasksDone()->count()}}</span>)</span>
             </div>
-            <ul class="task-container">
+            <ul class="task-container task-container--done">
                 @foreach($category->tasksDone as $task)
                 @include('tasks.list', ['task' => $task, 'check' => 'checked'])
                 @endforeach
@@ -55,4 +55,9 @@
     @endforeach
 </div>
 
+
+<div class="list-ghost">
+    <img src="{{asset('/images/all-task-lists-hidden-dark.svg')}}" alt="todas as listas ocultadas">
+    <span>Todas as suas listas estão ocultas</span>
+</div>
 @endsection

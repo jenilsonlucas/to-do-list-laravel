@@ -21,7 +21,8 @@ class TaskFactory extends Factory
             'name' => fake()->sentence(10),
             'description' => fake()->paragraph(),
             'completed' => fake()->boolean(),
-
+            'user_id' => 1,
+            'category_id' => 1
         ];
     }
 }

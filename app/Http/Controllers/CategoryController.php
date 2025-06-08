@@ -19,14 +19,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('category-create');
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -43,22 +35,6 @@ class CategoryController extends Controller
             "category" => $category,
             "message" => "Categoria {$category->name} criada com sucesso!"
         ]);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Category $category)
-    {
-        return view('category-show', compact('category'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
-    {
-        return view('category-edit', compact('category'));
     }
 
     /**
@@ -82,6 +58,19 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return redirect('/')->with('message', 'Categoria '. $category->name . ' apagada com successo!' );
+        return response()->json([
+            'messsage' => 'Categoria '. $category->name . ' apagada com successo!'
+        ]); 
+    }
+
+    /**
+     * remove all task done from storage
+     */
+    public function destroyDoneTasks(Category $category){
+        $category->tasksDone()->delete();
+
+        return response()->json([
+            'redirect' => url('/app')
+        ]);
     }
 }

@@ -420,7 +420,7 @@ aside.active-aside .navbar-side {
     right: 0;
     background: var(--primary-color);
     transition: width 0.3s;
-    overflow-x: auto;
+    overflow: hidden;
 }
 
 .content.active {
@@ -439,6 +439,38 @@ aside.active-aside .navbar-side {
     padding: 10px;
     overscroll-behavior: none;
     transition: all 0.5s ease-in-out;
+    transition-delay: 0.3s ;
+}
+
+.content .tasks-list.active{
+    display: none;
+}
+
+.content .list-ghost {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    max-height: 87%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--primary-color);
+    transition: all 0.1s ease-in-out;
+    
+}
+
+.content .list-ghost.active{
+    top: 0;
+    transition-delay: .6s;
+}
+
+.content .list-ghost span {
+    font-size: 1em;
+    color: #dbdbdb;
 }
 
 .content.active .tasks-list {
@@ -601,7 +633,6 @@ aside.active-aside .navbar-side {
     opacity: 1;
 }
 
-
 .task-head .options .category-options .box-options {
     display: flex;
     flex-direction: column;
@@ -629,7 +660,7 @@ aside.active-aside .navbar-side {
     background: #282b2d;
 }
 
-.options .category-options .box-options > span.disable{
+.options .category-options .box-options > span.disable {
     background: #282928;
     color: #40444a;
     pointer-events: none;

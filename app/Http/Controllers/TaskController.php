@@ -11,26 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $tasks = User::find(2)->tasks()->orderBy('id', 'Desc')->get();
-
-        return view('tasks.index', compact('tasks'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $categories = User::find(2)->categories;
-
-        return view('tasks.create', compact('categories'));
-    }
-
+    
     /**
      * Store a newly created resource in storage.
      */
@@ -52,24 +33,6 @@ class TaskController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Task $task)
-    {
-        
-        return view('tasks.show', compact('task'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Task $task)
-    {
-        $categories = User::find(2)->categories;
-
-        return view('tasks.edit', compact('task', 'categories'));
-    }
 
     /**
      * Update the specified resource in storage.
@@ -77,6 +40,10 @@ class TaskController extends Controller
     public function update(Request $request, Task $task)
     {
         $task->update($request->all());
+
+        return response()->json([
+            'messsage' => ''
+        ]);
     }
 
     /**
@@ -85,5 +52,9 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         $task->delete();
+
+        return response()->json([
+            'messsage' => ''
+        ]);
     }
 }

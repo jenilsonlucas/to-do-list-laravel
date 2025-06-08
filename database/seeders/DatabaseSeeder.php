@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Task;
+use Database\Factories\CategoryFactory;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,7 +16,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(1)->create();
+        User::factory(1)->create([
+            'password' => 12345678
+        ]        
+        );
 
         /*User::factory()->create([
             'name' => 'Test User',
@@ -33,5 +37,8 @@ class DatabaseSeeder extends Seeder
         //         Task::factory(1)->for(User::factory())
         //     )
         //     )->create();
+
+        // Category::factory(5)->create();
+        Task::factory(5)->create();
      }
 }

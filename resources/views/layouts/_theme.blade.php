@@ -8,6 +8,7 @@
     <title>To do list app</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
+    <link rel="shortcut icon" href="{{asset('/images/favicon_256.ico')}}" type="image/x-icon">
 </head>
 
 
@@ -34,9 +35,6 @@
                 </form>
             </div>
             <div class="info-icons">
-                <a href="#" class="notification"><i class='bx bxs-bell'></i>
-                <span class="notifcation-number">3</span>
-                </a>
                 <a href="#"><i class='bx bx-cog'></i></a>
             </div>
             <div class="profile">
