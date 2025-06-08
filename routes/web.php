@@ -14,9 +14,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::middleware('verified')->group(function () {
-        Route::get('/app', [CategoryController::class, 'index']);
-
-        Route::get('/categoria/criar', [CategoryController::class, 'create']);
+        Route::get('/app', [CategoryController::class, 'index'])->name('category.index');
 
         Route::post('/app', [CategoryController::class, 'store'])->name('category.store');
 

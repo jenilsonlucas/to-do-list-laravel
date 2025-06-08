@@ -21,15 +21,14 @@
 
         <div class="info">
             <div class="search">
-                <form class='form-search' action="#">
+                <form class='form-search' data-send="false" action="{{route('category.index')}}">
                     <label class="icon-search"><i class='bx bx-search'></i></label>
                     <div class="input-box">
                         <button><i class='bx bx-search'></i></button>
-                        <input type="text" name="" id="" placeholder="Pesquisar">
-                        <select name="" id="">
-                            <option disabled selected>Filtro</option>
-                            <option value="">listas</option>
-                            <option value="">tarefas</option>
+                        <input type="text" name="s" placeholder="Pesquisar">
+                        <select name="option">
+                            <option disabled>Filtro</option>
+                            <option selected value="category">listas</option>
                         </select>
                     </div>
                 </form>
@@ -48,7 +47,7 @@
     <aside>
         <nav class="navbar-side">
             <button class="aside-btn-task"><i class='bx bx-plus'></i>Criar</button>
-            <a href="#" class="thing-all"><i class='bx bx-chevron-down-circle'></i>Todas as tarefas</a>
+            <a href="{{route('category.index')}}" class="thing-all"><i class='bx bx-chevron-down-circle'></i>Todas as tarefas</a>
             <div class="dropdown">
                 <div class="select">
                     <span class="selected">Listas</span>

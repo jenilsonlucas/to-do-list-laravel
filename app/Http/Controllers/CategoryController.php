@@ -12,9 +12,16 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Auth::user()->categories;
+
+        $user = Auth::user();
+        $query = $user->categories();
+
+        if($request->input('option') == 'category')
+            $query->whereLike("name", '%'. $request->input('s') .'%');
+        
+        $categories = $query->get();
         return view('category.list', compact('categories'));
     }
 
