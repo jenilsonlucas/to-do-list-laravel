@@ -16,12 +16,6 @@ class RegisterController extends Controller
 {
     
 
-    public function showRegisterForm()
-    {
-        return view('auth.register');
-    }
-
-
     public function register(Request $request): RedirectResponse
     {
         $validatedData = $request->validate([
