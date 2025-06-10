@@ -19,10 +19,6 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('/app', [CategoryController::class, 'store'])->name('category.store');
 
-        Route::get('/categoria/{category}', [CategoryController::class, 'show'])->name('category.show');
-
-        Route::get('/categoria/{category}/edit', [CategoryController::class, 'edit'])->name('category.edit');
-
         Route::put('/categoria/{category}', [CategoryController::class, 'update'])->name('category.update');
 
         Route::delete('/categoria/{category}', [CategoryController::class, 'destroy'])->name('category.destroy');
@@ -32,23 +28,16 @@ Route::middleware(['auth'])->group(function () {
 
         // Task Routes
 
-        Route::get('/tarefas', [TaskController::class, 'index'])->name('tasks.index');
-
-        Route::get('/tarefas/criar', [TaskController::class, 'create'])->name('tasks.create');
-
         Route::post('/tarefas', [TaskController::class, 'store'])->name('tasks.store');
-
-        Route::get('/tarefas/{task}', [TaskController::class, 'show'])->name('tasks.show');
-
-        Route::get('/tarefas/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
-
         Route::put('/tarefas/{task}', [TaskController::class, 'update'])->name('tasks.update');
 
         Route::delete('/tarefas/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
-        
+        // Profile user
         Route::get('/perfil', [UserController::class, 'edit'])->name('user.edit');    
         Route::post('/perfil/{user}', [UserController::class, 'update'])->name('user.update');    
+        
+        //loggout
         Route::get('/sair', [LoginController::class, 'logout']);
 
 
@@ -72,8 +61,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 //Auth route
-
-
 Route::get('/', function () {
     $showRegister = old('form_type') === 'register';
 

@@ -22,7 +22,8 @@
                     <p class="message error">
                         <i class='bx bx-error-circle'></i>
                         {{ $message }}
-                    @enderror
+                    </p>    
+                        @enderror
                     <div class="input-box">
                         <label for="passsword">Senha</label>
                         <input type="text" name="passsword" id="passsword">
@@ -31,6 +32,7 @@
                     <p class="message error">
                         <i class='bx bx-error-circle'></i>
                         {{ $message }}
+                    </p>
                     @enderror
                     <div class="input-box">
                         <label for="password__confirm">Confirme Senha</label>
@@ -40,6 +42,7 @@
                     <p class="message error">
                         <i class='bx bx-error-circle'></i>
                         {{ $message }}
+                    </p>
                     @enderror
                 </div>
                 <div class="form__others">
@@ -47,7 +50,12 @@
                         <img src="{{asset($user->image)}}" class="form__img" alt="foto de perfil">
                         <input type="file" accept="image/jpeg, image/png, image/jpg" name="photo" id="file">
                     </label>
-
+                    @error('photo')
+                    <p class="message error">
+                        <i class='bx bx-error-circle'></i>
+                        {{ $message }}
+                    </p>
+                    @enderror
                     <button class="btn-update">Actualizar</button>
                 </div>
             </form>

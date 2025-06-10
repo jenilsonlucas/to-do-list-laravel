@@ -1346,6 +1346,12 @@ aside.active-aside .navbar-side {
     flex-direction: column;
     padding: 25px;
     gap: 45px;
+    transition: all .3s;
+}
+
+.content.active .settings{
+    justify-content: center;
+    align-items: center;
 }
 
 .settings__head span {
@@ -1360,7 +1366,13 @@ aside.active-aside .navbar-side {
     border: 1px solid rgba(255, 255, 255, 0.2);
     height: 100%;
     border-radius: 8px;
+    transition: all .3s;
     padding: 20px 30px;
+
+}
+
+.content.active .settings__content{
+    width: 900px;
 }
 
 .settings__content__form form {
@@ -1400,6 +1412,8 @@ aside.active-aside .navbar-side {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    max-width: 200px;
+    align-items: center;
     gap: 30px;
 }
 
