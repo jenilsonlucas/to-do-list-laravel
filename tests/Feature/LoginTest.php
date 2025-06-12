@@ -91,6 +91,16 @@ class LoginTest extends TestCase
         $response->assertRedirectBack();
     }
 
+    #[Test]
+    public function login_requered_all_fields_less_remember():void
+    {
+        $response = $this->post('/login', [
+            'email' => '',
+            'password' => ''
+        ]);
+
+        $response->assertSessionHasErrors(['email', 'password']);
+    }
 
     #[Test]
     public function login_requires_valid_email_and_password():void

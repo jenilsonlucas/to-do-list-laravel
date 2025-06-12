@@ -20,8 +20,10 @@ class CategoryController extends Controller
 
         if($request->input('option') == 'category')
             $query->whereLike("name", '%'. $request->input('s') .'%');
-        
+     
+            
         $categories = $query->get();
+        if(!$categories->count()) $categories = $user->categories;
         return view('category.list', compact('categories'));
     }
 
@@ -66,7 +68,7 @@ class CategoryController extends Controller
         $category->delete();
 
         return response()->json([
-            'messsage' => 'Categoria '. $category->name . ' apagada com successo!'
+            'message' => 'Categoria '. $category->name . ' apagada com sucesso!'
         ]); 
     }
 

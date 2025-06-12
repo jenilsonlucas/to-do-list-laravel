@@ -16,10 +16,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-    //     User::factory(1)->create([
-    //         'password' => 12345678
-    //     ]        
-    //     );
+        // User::factory(1)->create([
+        //     'password' => 12345678
+        // ]        
+        // );
 
         /*User::factory()->create([
             'name' => 'Test User',
