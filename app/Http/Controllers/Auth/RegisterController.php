@@ -1,8 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,12 +16,6 @@ class RegisterController extends Controller
 {
     
 
-    public function showRegisterForm()
-    {
-        return view('auth.register');
-    }
-
-
     public function register(Request $request): RedirectResponse
     {
         $validatedData = $request->validate([
@@ -26,14 +24,19 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed']
         ]);
 
+        $validatedData['image'] = '/image/avatar.jpg';
+        
         $user = User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password'])
         ]);
 
+        
         Auth::login($user);
         
-        return redirect()->route('tasks.index');
+        event(new Registered($user)); 
+
+        return redirect()->route('verification.notice', ['email' => $user->email]);
     }
 }

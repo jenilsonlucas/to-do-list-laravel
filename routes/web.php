@@ -1,53 +1,72 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UserController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('/', [CategoryController::class, 'index']);
-
-Route::get('/categoria/criar', [CategoryController::class, 'create']);
-
-Route::post('/', [CategoryController::class, 'store'])->name('category.store');
-
-Route::get('/categoria/{category}', [CategoryController::class, 'show'])->name('category.show');
-
-Route::get('/categoria/{category}/edit', [CategoryController::class, 'edit'])->name('category.edit');
-
-Route::put('/categoria/{category}', [CategoryController::class, 'update'])->name('category.update');
-
-Route::delete('/categoria/{category}', [CategoryController::class, 'destroy'])->name('category.destroy');
+Route::middleware(['auth'])->group(function () {
 
 
-// Task Routes
+    Route::middleware('verified')->group(function () {
+        Route::get('/app', [CategoryController::class, 'index'])->name('category.index');
 
-Route::get('/tarefas', [TaskController::class, 'index'])->name('tasks.index');
+        Route::post('/app', [CategoryController::class, 'store'])->name('category.store');
 
-Route::get('/tarefas/criar', [TaskController::class, 'create'])->name('tasks.create');
+        Route::put('/categoria/{category}', [CategoryController::class, 'update'])->name('category.update');
 
-Route::post('/tarefas', [TaskController::class, 'store'])->name('tasks.store');
+        Route::delete('/categoria/{category}', [CategoryController::class, 'destroy'])->name('category.destroy');
 
-Route::get('/tarefas/{task}', [TaskController::class, 'show'])->name('tasks.show');
+        Route::delete('/categoria/{category}/tasks/done', [CategoryController::class, 'destroyDoneTasks'])->name('category.tasks.done.destroy');
 
-Route::get('/tarefas/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
 
-Route::put('/tarefas/{task}', [TaskController::class, 'update'])->name('tasks.update');
+        // Task Routes
 
-Route::delete('/tarefas/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+        Route::post('/tarefas', [TaskController::class, 'store'])->name('tasks.store');
+        Route::put('/tarefas/{task}', [TaskController::class, 'update'])->name('tasks.update');
 
+        Route::delete('/tarefas/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+
+        // Profile user
+        Route::get('/perfil', [UserController::class, 'edit'])->name('user.edit');    
+        Route::put('/perfil/{user}', [UserController::class, 'update'])->name('user.update');    
+        
+        //loggout
+        Route::get('/sair', [LoginController::class, 'logout']);
+
+
+    });
+
+    Route::get('/email/verificar/{email}', function ($email) {
+        return view('auth.verify-email', ['email' => $email]);
+    })->name('verification.notice');
+
+    Route::get('/email/verificar/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+
+        return redirect('/app');
+    })->middleware('signed')->name('verification.verify');
+
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('message', 'Link de verificação enviar');
+    })->middleware('throttle:6,1')->name('verification.send');
+});
 
 //Auth route
+Route::get('/', function () {
+    $showRegister = old('form_type') === 'register';
 
-Route::get('/entrar', [LoginController::class, 'index'])->name('login');
+    return view('auth.auth', compact('showRegister'));
+})->name('auth');
 
 Route::post('/login', [LoginController::class, 'login']);
 
-Route::get('/registrar', [RegisterController::class, 'showRegisterForm'])->name('register');
-
 Route::post('/register', [RegisterController::class, 'register']);
-
-Route::post('/logout', [LoginController::class, 'logout']);

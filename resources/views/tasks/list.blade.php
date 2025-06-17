@@ -1,19 +1,25 @@
-   
-<ul>
-    <li><strong>ID: </strong>{{ $task->id }}</li>
-    <li><strong>Nome: </strong>{{ $task->name }}</li>
-    <li><strong>Categoria: </strong>{{ $task->category->name }}</li>
-    <li><strong>Descrição: </strong>{{ $task->description }}</li>
-    <li><strong>Feito: </strong>{{ $task->completed ? "sim" : "não"}}</li>
-    <li><strong>Criado em: </strong>{{ $task->created_at->format('d/m/Y H:i') }}</li>
-    <li><strong>Actualizado em: </strong>{{ $task->updated_at->format('/d/m/Y H:i') }}</li>
-    <li><a href="{{ route('tasks.edit', ['task' => $task->id]) }}">Editar categoria</a></li>
-    <li><a href="{{ route('tasks.show', ['task' => $task->id]) }}">Ver detalhes</a></li>
-    <li>
-        <form action="{{ route('tasks.destroy', ['task' => $task->id]) }}" method="post">
-            @csrf
-            @method('delete')
-            <button type="submit" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
-        </form>
-    </li>
-</ul>
+
+
+   <li>
+       <div class="info-task">
+           <div class="check {{$check ?? ''}}">
+               <span class="checkbox" data-action="{{route('tasks.update', ['task' => $task])}}" data-id="{{$task->id}}" data-status="{{$task->completed ? '1' : '0'}}"></span>
+               <span class="task-text" contenteditable="false">{{$task->name}}</span>
+           </div>
+           <div class="task-option">
+               
+               <button class="btn edit"><i class='bx bxs-edit-alt'></i></button>
+               <button class="btn save" data-action="{{route('tasks.update', ['task' => $task])}}" data-id="{{$task->id}}"><i class='bx bx-save'></i></button>
+               <button class="btn delete" data-action="{{route('tasks.destroy', ['task' => $task])}}" data-id="{{$task->id}}"><i class='bx bxs-trash'></i></button>
+           </div>
+       </div>
+       <div class="task-details">
+           <i class='bx bx-menu'></i>
+           <span>{{$task->description}}</span>
+       </div>
+   </li>
+
+
+
+
+

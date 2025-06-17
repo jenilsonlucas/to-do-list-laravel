@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -8,19 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-
-
-
-    /**
-     * render form authentication
-     */
-    public function index()
-    {
-        return view('auth.login');
-    }
-    /*
-    * Handle an authentication attempt 
-    */
 
     public function login(Request $request): RedirectResponse
     {
@@ -33,10 +23,10 @@ class LoginController extends Controller
       
         if(Auth::attempt($credentials, $remember))  {
             $request->session()->regenerate();
-            return redirect()->intended('tarefas');
+            return redirect()->intended('app');
         }
 
-        return back()->with('message', 'verifica os dados enviados');
+        return back()->with('credentials', 'Verifique seu email e senha e tente novamente');
     }
 
     public function logout(Request $request): RedirectResponse

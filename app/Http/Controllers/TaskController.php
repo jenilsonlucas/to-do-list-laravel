@@ -7,29 +7,11 @@ use App\Models\Task;
 use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $tasks = User::find(2)->tasks()->orderBy('id', 'Desc')->get();
-
-        return view('tasks.index', compact('tasks'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $categories = User::find(2)->categories;
-
-        return view('tasks.create', compact('categories'));
-    }
-
+    
     /**
      * Store a newly created resource in storage.
      */
@@ -37,34 +19,20 @@ class TaskController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'category_id' => 'required|integer|gte:1',
-            'user_id' => 'required|integer|gte:1'
+            'description' => 'nullable|string|max:255',
+            'category_id' => 'required|integer|gte:1|exists:categories,id'
         ]);
 
-        Task::create($validated);
+        $validated['user_id'] = Auth::id();
 
-        return redirect('/tarefas')->with("Tarefa salva com succeso!");
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Task $task)
-    {
         
-        return view('tasks.show', compact('task'));
+        $task = Task::create($validated);
+
+        return response()->json([ 
+            'task' => $task,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Task $task)
-    {
-        $categories = User::find(2)->categories;
-
-        return view('tasks.edit', compact('task', 'categories'));
-    }
 
     /**
      * Update the specified resource in storage.
@@ -73,7 +41,9 @@ class TaskController extends Controller
     {
         $task->update($request->all());
 
-        return redirect()->route('tasks.index')->with('message' ,'Tarefa guardada com sucesso');
+        return response()->json([
+            'message' => ''
+        ]);
     }
 
     /**
@@ -82,7 +52,9 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         $task->delete();
-        
-        return redirect()->route('tasks.index')->with('message', 'tarefa removida com sucesso');
+
+        return response()->json([
+            'message' => ''
+        ]);
     }
 }
