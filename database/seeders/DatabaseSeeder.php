@@ -37,8 +37,16 @@ class DatabaseSeeder extends Seeder
         //         Task::factory(1)->for(User::factory())
         //     )
         //     )->create();
-
-        //  Category::factory(5)->create();
-        Task::factory(5)->create();
+        $user = User::factory()->create([
+            'password' => 12345678
+        ]        
+        );
+        $category =  Category::factory()->create([
+            'user_id' => $user->id
+         ]);
+        Task::factory(5)->create([
+            'user_id' => $user->id,
+            'category_id' => $category->id
+        ]);
      }
 }

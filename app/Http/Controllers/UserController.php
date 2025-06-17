@@ -40,19 +40,18 @@ class UserController extends Controller
             ]
         ]);
 
-        $validator->sometimes('email', ['require', 'string', 'email', 'max:255', 'unique:users'], function (Fluent $input) {
+        $validator->sometimes('email', ['required', 'string', 'email', 'max:255', 'unique:users'], function (Fluent $input) {
             return $input->email != Auth::user()->email;
         });
 
         $validateData = $validator->validate();
 
-        if ($request->has("photo")) {
+        if ($request->hasFile("photo")) {
             $name = str_replace("storage/", "", $user->image);
             Storage::disk('public')->delete($name);
             $file = $request->file("photo");
-            $extension = $file->getClientOriginalExtension();
-            $name = $user->name.time().".".$extension;
-            $file->storeAs('images/', $name, 'public');
+            $name = $file->hashName();
+            $file->storeAs('images/',$name, 'public');
             $user->image =  "storage/images/".$name;
         }
         

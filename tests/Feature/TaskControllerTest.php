@@ -86,6 +86,11 @@ class TaskControllerTest extends TestCase
         $response->assertOk();
 
         $response->assertJsonStructure(['message']);
+    
+        $this->assertDatabaseHas('tasks', [
+            'id' => $task->id,
+            'name' => 'novo nome'
+        ]);
     }
 
     #[Test]

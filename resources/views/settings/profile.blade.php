@@ -13,6 +13,7 @@
         <div class="settings__content__form">
             <form action="{{route('user.update', ['user' => $user])}}" method="post" enctype="multipart/form-data" data-send="false">
                 @csrf
+                @method('PUT')
                 <div class="form__text">
                     <div class="input-box">
                         <label for="email">Email</label>
@@ -25,8 +26,8 @@
                     </p>    
                         @enderror
                     <div class="input-box">
-                        <label for="passsword">Senha</label>
-                        <input type="text" name="passsword" id="passsword">
+                        <label for="password">Senha</label>
+                        <input type="text" name="password" id="passsword">
                     </div>
                     @error('password')
                     <p class="message error">
