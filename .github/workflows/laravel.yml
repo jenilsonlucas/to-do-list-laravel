@@ -46,11 +46,13 @@ jobs:
     - name: Esperar MySQL ficar pronto
       run: |
         echo "Esperando MySQL inicializar..."
-        for i in {1..15}; do
+        for i in {1..5}; do
           mysqladmin ping -h${{ env.DB_HOST }} -u${{ env.DB_USERNAME }} -p${{ env.DB_PASSWORD }} && break
           echo "MySQL ainda não disponível... tentando novamente em 3 segundos."
           sleep 3
         done
+    - name: Debug mysql logs
+      run: docker logs mysql 
     - name: Roda as migrations e testes
       run: |
           php artisan migrate --force
