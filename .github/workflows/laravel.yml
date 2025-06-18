@@ -11,7 +11,7 @@ env:
     DB_PORT: 3306
     DB_DATABASE: test
     DB_USERNAME: root
-    DB_PASSWORD: root
+    DB_PASSWORD: ''
 jobs:
   laravel-tests:
 
@@ -23,8 +23,6 @@ jobs:
            - 3306/tcp
          env: 
            MYSQL_DATABASE: ${{ env.DB_DATABASE }}
-           MYSQL_USER: ${{ env.DB_USERNAME }}
-           MYSQL_PASSWORD: ${{ env.DB_PASSWORD }}
            MYSQL_ROOT_PASSWORD: ${{ env.DB_PASSWORD }}
          options: >-
            --name=mysql
