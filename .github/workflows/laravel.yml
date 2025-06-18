@@ -50,7 +50,7 @@ jobs:
           mysqladmin ping -h${{ env.DB_HOST }} -u${{ env.DB_USERNAME }} -p${{ env.DB_PASSWORD }} && break
           echo "MySQL ainda não disponível... tentando novamente em 3 segundos."
           sleep 3
-        done"
+        done
     - name: Roda as migrations e testes
       run: |
           php artisan migrate --force
