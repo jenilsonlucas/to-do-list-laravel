@@ -504,6 +504,7 @@ aside.active-aside .navbar-side {
     position: relative;
     max-height: 410px;
     min-width: 320px;
+    min-height: 160px;
     width: 390px;
     background: #131314;
     padding: 0px 0px 10px;
