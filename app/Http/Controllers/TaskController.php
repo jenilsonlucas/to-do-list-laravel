@@ -19,7 +19,7 @@ class TaskController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'string|max:255',
+            'description' => 'nullable|string|max:255',
             'category_id' => 'required|integer|gte:1|exists:categories,id'
         ]);
 
@@ -42,7 +42,7 @@ class TaskController extends Controller
         $task->update($request->all());
 
         return response()->json([
-            'messsage' => ''
+            'message' => ''
         ]);
     }
 
@@ -54,7 +54,7 @@ class TaskController extends Controller
         $task->delete();
 
         return response()->json([
-            'messsage' => ''
+            'message' => ''
         ]);
     }
 }

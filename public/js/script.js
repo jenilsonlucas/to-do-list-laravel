@@ -1315,16 +1315,20 @@ function dropdownTaskDone(list) {
     list.appendChild(taskDropdown);
 }
 
-function hiddenAllLists() {
-    const allHidden = Array.from(taskItems).every((list) =>
-        list.classList.contains("hidden")
+
+function hiddenAllLists(){
+    const listas = document.querySelectorAll(".content .task-item");
+
+    const allHidden = Array.from(listas).every( 
+        (list) => list.classList.contains("hidden")
     );
 
-    document.querySelector(".list-ghost").classList.remove("active");
 
-    if (!allHidden) return;
+    document.querySelector('.list-ghost').classList.remove('active');
 
-    document.querySelector(".list-ghost").classList.add("active");
+    if(!allHidden) return;
+
+    document.querySelector('.list-ghost').classList.add('active');
 }
 
 /**

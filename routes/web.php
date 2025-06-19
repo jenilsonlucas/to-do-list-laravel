@@ -35,7 +35,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Profile user
         Route::get('/perfil', [UserController::class, 'edit'])->name('user.edit');    
-        Route::post('/perfil/{user}', [UserController::class, 'update'])->name('user.update');    
+        Route::put('/perfil/{user}', [UserController::class, 'update'])->name('user.update');    
         
         //loggout
         Route::get('/sair', [LoginController::class, 'logout']);
@@ -43,8 +43,8 @@ Route::middleware(['auth'])->group(function () {
 
     });
 
-    Route::get('/email/verificar/{email}', function ($email) {
-        return view('auth.verify-email', ['email' => $email]);
+    Route::get('/email/verificar', function () {
+        return view('auth.verify-email');
     })->name('verification.notice');
 
     Route::get('/email/verificar/{id}/{hash}', function (EmailVerificationRequest $request) {

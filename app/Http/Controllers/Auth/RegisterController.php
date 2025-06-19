@@ -16,12 +16,6 @@ class RegisterController extends Controller
 {
     
 
-    public function showRegisterForm()
-    {
-        return view('auth.register');
-    }
-
-
     public function register(Request $request): RedirectResponse
     {
         $validatedData = $request->validate([
@@ -30,12 +24,11 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed']
         ]);
 
-        $validatedData['image'] = '/image/avatar.jpg';
-        
         $user = User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password'])
+            'password' => Hash::make($validatedData['password']),
+            'image' => '/images/avatar.jpg' 
         ]);
 
         

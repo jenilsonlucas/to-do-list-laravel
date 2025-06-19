@@ -12,19 +12,6 @@ use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
 
-
-
-    /**
-     * render form authentication
-     */
-    public function index()
-    {
-        return view('auth.login');
-    }
-    /*
-    * Handle an authentication attempt 
-    */
-
     public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
