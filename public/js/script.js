@@ -655,7 +655,6 @@ function addTask(task) {
         };
         if (sendModal(action, data)) {
             addContainerDone(categoryContainer.parentElement);
-            addDoneTask(categoryContainer.parentElement);
             const li = checkbox.closest("li");
             const count = categoryContainer.parentElement.querySelector(
                 ".select .selected span"
@@ -698,6 +697,7 @@ function addTask(task) {
                 }
             }
             container.prepend(li);
+            addDoneTask(categoryContainer.parentElement);
         }
     });
 
@@ -755,7 +755,6 @@ function addTask(task) {
 
         enterEditMode({ text: details, btnEdit, btnSave });
     });
-
     details.addEventListener("blur", () => {
         setTimeout(() => {
             exitEditMode({ details, btnEdit, btnSave });
@@ -1062,7 +1061,6 @@ async function sendModal(actionModal, dataModal) {
             window.location.href = data.redirect;
             return;
         }
-
     } catch (error) {
         console.error("error ao enviar:", error);
         return 0;
@@ -1247,9 +1245,12 @@ function addNoTask(list) {
     const done = list.querySelector(".task-container--done");
     const undone = list.querySelector(".task_container--undone");
 
-    if (done?.children.length !== 0 || undone?.children.length !== 0) return;
+    if ((done?.children.length ?? 0) > 0 || (undone?.children.length ?? 0) > 0)
+        return;
 
+    if(done)
     done.remove();
+    if(undone)
     undone.remove();
 
     if (list.querySelector(".task-dropdown"))
@@ -1334,10 +1335,10 @@ function hiddenAllLists(){
  * updated image profile
  */
 
-const updateUser = document.querySelector('.settings__content__form');
-const imgForm = updateUser?.querySelector('.form__img');
-const inputFile = updateUser?.querySelector('#file');
+const updateUser = document.querySelector(".settings__content__form");
+const imgForm = updateUser?.querySelector(".form__img");
+const inputFile = updateUser?.querySelector("#file");
 
-inputFile?.addEventListener('change', () => {
+inputFile?.addEventListener("change", () => {
     imgForm.src = URL.createObjectURL(inputFile.files[0]);
-})
+});
