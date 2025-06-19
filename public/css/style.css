@@ -20,6 +20,21 @@ body {
     overflow: hidden;
 }
 
+::-webkit-scrollbar{
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track{
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb{
+    background: #dbdbdb;
+    border-radius: 10px;
+}
+
 .navbar-top {
     position: relative;
     left: 0;
