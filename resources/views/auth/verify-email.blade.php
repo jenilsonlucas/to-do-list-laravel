@@ -105,11 +105,7 @@
             <div class="verify-email">
                 <h1>Verifique seu e-mail</h1>
 
-                @if (session('message'))
-                <p>{{ session('message') }}</p>
-                @endif
-
-                <p>Antes de continuar, por favor verifique seu e-mail {{ $email }}. Se você não recebeu o e-mail, clique abaixo para reenviar.</p>
+                <p>Antes de continuar, por favor verifique seu e-mail {{ Auth::user()->email }}. Se você não recebeu o e-mail, clique abaixo para reenviar.</p>
 
                 <form method="POST" action="{{ route('verification.send') }}">
                     @csrf

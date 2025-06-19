@@ -43,8 +43,8 @@ Route::middleware(['auth'])->group(function () {
 
     });
 
-    Route::get('/email/verificar/{email}', function (Request $request) {
-        return view('auth.verify-email', ['email' => $request->user()->email]);
+    Route::get('/email/verificar', function () {
+        return view('auth.verify-email');
     })->name('verification.notice');
 
     Route::get('/email/verificar/{id}/{hash}', function (EmailVerificationRequest $request) {
