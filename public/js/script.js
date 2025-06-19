@@ -1316,7 +1316,9 @@ function dropdownTaskDone(list) {
 
 
 function hiddenAllLists(){
-    const allHidden = Array.from(taskItems).every( 
+    const listas = document.querySelectorAll(".content .task-item");
+
+    const allHidden = Array.from(listas).every( 
         (list) => list.classList.contains("hidden")
     );
 
