@@ -21,6 +21,7 @@ class GoogleSocialite extends Controller implements SocialiteInterface
     {
         $googleUser = Socialite::driver('google')->user();
 
+        dd(now());
         $user = User::firstOrCreate([
             'email' => $googleUser->email,
         ], [
