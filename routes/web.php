@@ -70,3 +70,9 @@ Route::get('/', function () {
 Route::post('/login', [LoginController::class, 'login']);
 
 Route::post('/register', [RegisterController::class, 'register']);
+
+//social Auth
+Route::get('/login/{provider}/redirect', [LoginController::class, 'redirect']);
+ 
+Route::get('/login/{provider}/callback', [LoginController::class, 'callback']);
+
