@@ -21,7 +21,6 @@ class GoogleSocialite extends Controller implements SocialiteInterface
     {
         $googleUser = Socialite::driver('google')->user();
 
-        dd(now());
         $user = User::firstOrCreate([
             'email' => $googleUser->email,
         ], [
@@ -31,6 +30,7 @@ class GoogleSocialite extends Controller implements SocialiteInterface
             'email_verified_at' => now(),
             'image' => '/images/avatar.jpg'
         ]);
+                dd($user);
 
         Auth::login($user);
 
