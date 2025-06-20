@@ -352,7 +352,7 @@
         </div>
         <div class="midia-options">
             <span class="midia-title">OU</span>
-            <a href="" class="btn">
+            <a href="{{url('/login/google/redirect')}}" class="btn">
                 <img class="logo-media" src="{{ asset('/images/google.png')}}">
                 <span>Continuar com o Google</span>
             </a>

@@ -4,13 +4,19 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-
+use App\Http\Controllers\SocialiteManager;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+
+    public function __construct(
+        private SocialiteManager $manager
+    )
+    {
+    }
 
     public function login(Request $request): RedirectResponse
     {
@@ -39,4 +45,15 @@ class LoginController extends Controller
         
         return redirect('/');
     }
+
+    public function redirect(string $string)
+    {
+        return $this->manager->driver($string)->redirectToProvider();
+    }
+
+    public function callback(string $string)
+    {
+        return $this->manager->driver($string)->handleProviderCallback();
+    }
+
 }

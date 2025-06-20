@@ -7,6 +7,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
@@ -62,6 +63,8 @@ Route::middleware(['auth'])->group(function () {
 
 //Auth route
 Route::get('/', function () {
+    if(Auth::check()) return redirect('/app');
+    
     $showRegister = old('form_type') === 'register';
 
     return view('auth.auth', compact('showRegister'));
@@ -70,3 +73,9 @@ Route::get('/', function () {
 Route::post('/login', [LoginController::class, 'login']);
 
 Route::post('/register', [RegisterController::class, 'register']);
+
+//social Auth
+Route::get('/login/{provider}/redirect', [LoginController::class, 'redirect']);
+ 
+Route::get('/login/{provider}/callback', [LoginController::class, 'callback']);
+
