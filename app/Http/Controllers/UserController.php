@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Fluent;
@@ -28,7 +29,7 @@ class UserController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'password' => ['nullable', 'string', 'confirmed', Password::min(8)],
+            'password' => ['nullable','string', 'confirmed', Password::min(8)],
             'photo' => [
                 'nullable',
                 FILE::image()
@@ -54,7 +55,11 @@ class UserController extends Controller
             $file->storeAs('images/',$name, 'public');
             $user->image =  "storage/images/".$name;
         }
-        
+        if(empty($validateData['password']))
+            unset($validateData['password']);
+        else 
+           $validateData['password'] = Hash::make($validateData['password']); 
+
         $user->update($validateData);
         return redirect()->route('user.edit')->with('message_flash', 'Usuario actualizado com sucesso');
     }
