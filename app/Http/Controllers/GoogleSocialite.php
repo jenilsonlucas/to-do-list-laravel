@@ -30,7 +30,6 @@ class GoogleSocialite extends Controller implements SocialiteInterface
             'email_verified_at' => now(),
             'image' => '/images/avatar.jpg'
         ]);
-                dd($user);
 
         Auth::login($user);
 
