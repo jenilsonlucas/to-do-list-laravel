@@ -536,7 +536,7 @@ document.querySelectorAll('form:not([data-send="false"])').forEach((form) => {
                 flash.classList.remove("active");
             }, 3000);
         } catch (error) {
-            console.error(error.message);
+            console.error(error);
         }
         form.reset();
     });
@@ -584,7 +584,7 @@ function addTask(task) {
     taskText.classList.add("task-text");
     taskText.setAttribute("contenteditable", "false");
     taskText.textContent = task.name ? task.name : "nome da tarefa";
-
+    
     checkDiv.append(checkbox);
     checkDiv.append(taskText);
 

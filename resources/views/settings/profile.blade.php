@@ -27,7 +27,7 @@
                         @enderror
                     <div class="input-box">
                         <label for="password">Senha</label>
-                        <input type="text" name="password" id="passsword">
+                        <input type="text" name="password" id="passsword" value="">
                     </div>
                     @error('password')
                     <p class="message error">
@@ -39,12 +39,6 @@
                         <label for="password__confirm">Confirme Senha</label>
                         <input type="text" name="password_confirmation" id="password__confirm">
                     </div>
-                    @error('password__confirm')
-                    <p class="message error">
-                        <i class='bx bx-error-circle'></i>
-                        {{ $message }}
-                    </p>
-                    @enderror
                 </div>
                 <div class="form__others">
                     <label for="file">
