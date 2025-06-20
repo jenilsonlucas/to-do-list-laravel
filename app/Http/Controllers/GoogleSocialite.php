@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\SocialiteInterface;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -31,8 +32,11 @@ class GoogleSocialite extends Controller implements SocialiteInterface
             'image' => '/images/avatar.jpg'
         ]);
 
+        if($user->wasRecentlyCreated){
+            event(new Verified($user));
+        }
         Auth::login($user);
-
+        
         return redirect('/app');
     }
 }
