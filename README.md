@@ -49,6 +49,12 @@ Esse projeto demonstra experiência em desenvolvimento full stack com Laravel, i
 
 - /app/Providers/
 
+- /database/migrations/
+
+- /database/factories/
+
+- /database/seeders
+
 - /routes/
 
 - /resources/
