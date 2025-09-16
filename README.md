@@ -95,6 +95,12 @@ Para rodar os testes:
 2. Altere a variável de ambiente APP_ENV para testing. **APP_ENV=testing**
 3. No terminal, execute o seguinte comando: **php artisan test**
 
+## AMBIENTE DE PRODUCÃO
+
+Para fazer a deploy da aplicação tive que criar um imagem docker, por causa da forma de hospedagem no render.
+Como utilizei um plano gratuito, terás de esperar um 5 segundos até que aplicação abra por completo.
+Para veres como ficou clique aqui: [jenilsonlucas-to-do-list](https://jenilson-lucas-to-do-list.onrender.com)
+
 ## PLANEJAMENTO DE CONTINUIDADE
 
 Além das funcionalidades já implementadas, o projeto possui um planejamento de evolução que contempla novas features e integrações para aumentar o valor do sistema e sua escalabilidade:
