@@ -1,33 +1,41 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<h1 align="center">TO DO LIST</h1>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## SOBRE APLICAÇÃO
 
-## About Laravel
+Desenvolvi um projeto de gerenciamento de tarefas com foco em usabilidade, escalabilidade e boas práticas de desenvolvimento.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+O sistema permite que os usuários criem listas de tarefas personalizadas, nas quais podem adicionar, editar, excluir e visualizar tarefas em tempo real. Para garantir uma experiência fluida e eficiente, utilizei as seguintes tecnologias:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Frontend: HTML, CSS e Blade (Laravel) para criação de interfaces dinâmicas e bem estruturadas.
+- Backend: Laravel para implementação da lógica de negócio, organização de camadas e integração com banco de dados.
+- Funcionalidades dinâmicas: JavaScript (Vanilla) para manipulação em tempo real da interface e atualização instantânea das tarefas.
+- Autenticação: Integração com OAuth 2.0 do Google, permitindo que os usuários realizem cadastro e login de forma rápida e segura utilizando suas contas Google.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Além disso, implementei recursos avançados do ecossistema Laravel, como:
 
-## Learning Laravel
+- Jobs, Eventos e Listeners: para processar tarefas assíncronas e manter a aplicação performática.
+- Factories, Migrations e Seeders: para garantir a consistência e facilidade na criação e manutenção do banco de dados.
+- Middleware: para controle de acesso e segurança nas rotas da aplicação.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Também apliquei princípios de boas práticas de arquitetura, como o uso do padrão Adapter para integração com APIs externas (neste caso, a API do Google). Isso permite flexibilidade para futuras alterações sem impactar diretamente a regra de negócio.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Esse projeto demonstra experiência em desenvolvimento full stack com Laravel, integração com serviços externos, implementação de autenticação segura e aplicação de padrões de design, sempre visando escalabilidade e manutenção do código.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## INSTALAÇÃO DO PROJECTO
+
+Para fazer a instalação do projeto, é necessário ter alguns softwares instalados no seu sistema operacional para que ele funcione corretamente. Eu deixarei os links para cada ferramenta.
+
+Baixe de acordo com o seu sistema operacional (no meu caso, utilizei Linux).
+
+- [GIT](https://git-scm.com/downloads).
+- [COMPOSER](https://getcomposer.org/download/)
+- [PHP](https://www.php.net/downloads.php)
+- [POSTGRES](https://www.postgresql.org/download/) caso utilizes o banco de dados que utilizei.
+
+Agora, para continuar:
+
+1. Baixe o código do repositório. Abra o terminal e rode: **git clone <link-do-repositório>**
+    
 
 ## Laravel Sponsors
 
